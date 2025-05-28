@@ -5,14 +5,14 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import ExploreSection from '@/components/home_screen/ExploreSection';
+import ExploreSection from '@/components/screen_home/ExploreSection';
 
 export default function HomeScreen() {
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
         <View style={styles.textcontainer}>
-          <Image source={require('../../assets/images/favicon.png')} style={styles.image} />
+          <Image source={require('../../assets/images/adaptive-icon.png')} style={styles.image} />
           <Text style={styles.text}>
             <Text style={styles.hi}>Hi, I’m{'\n'}</Text>
             <Text style={styles.name}>Lila Botha</Text>

@@ -3,14 +3,13 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { HobbyDropdown } from '@/components/hobbies_screen/HobbyDropdown';
-import { HobbyCard } from '@/components/hobbies_screen/HobbyCard';
+import { HobbyDropdown } from '@/components/screen_hobbies/HobbyDropdown';
+import { HobbyCard } from '@/components/screen_hobbies/HobbyCard';
 
 
 export default function HobbiesScreen() {
   return (
     <ParallaxScrollView>
-
       <ThemedView style={styles.titleContainer}>
         <View style={styles.headerContent}>
           <Text style={styles.pageTitle}>My Hobbies</Text>
@@ -26,7 +25,6 @@ export default function HobbiesScreen() {
             description="Description of hobby"
           />
         </View>
-
       </ThemedView>
     </ParallaxScrollView>
   );

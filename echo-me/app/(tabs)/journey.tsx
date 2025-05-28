@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, View, Text } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -9,7 +9,9 @@ export default function JourneyScreen() {
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Journey</ThemedText>
+        <View style={styles.headerContent}>
+          <Text style={styles.pageTitle}>My Journey</Text>
+        </View>
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -21,15 +23,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+   headerContent: {
+    width: 300,
+    height: 160,
+    marginBottom: 20
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  pageTitle: {
+    fontSize: 50,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 10,
+    textAlign: 'center',
+    fontStyle: 'italic'
   },
 });
