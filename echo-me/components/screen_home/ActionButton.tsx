@@ -5,6 +5,7 @@ interface Props {
   title: string;
   backgroundColor: string;
   icon: any;
+  onPress?: () => void;
 }
 
 const ActionButton: React.FC<Props> = ({ title, backgroundColor, icon }) => (

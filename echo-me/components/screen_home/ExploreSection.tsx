@@ -1,22 +1,29 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ActionButton from './ActionButton';
+import { useRouter } from 'expo-router';
 
-const ExploreSection = () => (
-  <View style={styles.container}>
-    <Text style={styles.title}>Continue to Explore</Text>
-    <ActionButton
-      title="My Journey"
-      backgroundColor="#ED4FB3"
-      icon={require('../../assets/images/adaptive-icon.png')}
-    />
-    <ActionButton
-      title="Showcase"
-      backgroundColor="#47A9F5"
-      icon={require('../../assets/images/adaptive-icon.png')}
-    />
-  </View>
-);
+const ExploreSection = () => {
+  const router = useRouter(); // ✅ Move useRouter inside component
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Continue to Explore</Text>
+      <ActionButton
+        title="My Journey"
+        backgroundColor="#ED4FB3"
+        icon={require('../../assets/images/adaptive-icon.png')}
+        onPress={() => router.push('/journey')} 
+      />
+      <ActionButton
+        title="Showcase"
+        backgroundColor="#47A9F5"
+        icon={require('../../assets/images/adaptive-icon.png')}
+        onPress={() => router.push('/showcase')}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
