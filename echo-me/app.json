@@ -4,11 +4,7 @@
     "slug": "echo-me",
     "version": "1.0.0",
     "orientation": "portrait",
-    "splash": {
-      "image": "./assets/images/Splash_Screen.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#1A1A1A"
-    },
+    "icon": "./assets/images/Logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -16,14 +12,9 @@
       "supportsTablet": true
     },
     "android": {
-      "splash": {
-        "image": "./assets/images/Splash_Screen.png",
-        "backgroundColor": "#1A1A1A",
-        "resizeMode": "cover" 
-      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#A6BCE6"
       }
     },
     "web": {
@@ -32,7 +23,15 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#A6BCE6",
+          "image": "./assets/images/Logo.png",
+          "imageWidth": 200
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
