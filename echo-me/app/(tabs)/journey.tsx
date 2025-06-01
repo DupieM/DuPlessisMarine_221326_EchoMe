@@ -61,40 +61,43 @@ export default function JourneyScreen() {
         ))}
       </View>
 
-      <Progress.Bar
-        progress={(progressIndex + 1) / prompts.length}
-        width={300}
-        height={10}
-        color="#ba1fa4"
-        borderRadius={5}
-        style={styles.progressBar}
-      />
-      <Text style={styles.percentText}>
-        {Math.round(((progressIndex + 1) / prompts.length) * 100)}%
-      </Text>
 
-      <View style={styles.promptBox}>
-        <Text style={styles.promptText}>{currentPrompt}</Text>
-      </View>
+      <View style={styles.box}>
+        <Progress.Bar
+          progress={(progressIndex + 1) / prompts.length}
+          width={320}
+          height={15}
+          color="#5C319A"
+          borderRadius={8}
+          style={styles.progressBar}
+        />
+        <Text style={styles.percentText}>
+          {Math.round(((progressIndex + 1) / prompts.length) * 100)}%
+        </Text>
 
-      <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
-        <Text style={styles.buttonText}>Proceed</Text>
-      </TouchableOpacity>
+        <View style={styles.promptBox}>
+          <Text style={styles.promptText}>{currentPrompt}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
+          <Text style={styles.buttonText}>Proceed</Text>
+        </TouchableOpacity>
+        </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { 
-    flex: 1, 
-    padding: 20, 
-    backgroundColor: 'white', 
+    flex: 1,
+    padding: 15, 
+    backgroundColor: '#A6BCE6', 
     alignItems: 'center' 
   },
   pageTitle: {
-    fontSize: 40,
+    fontSize: 60,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#1E1924',
     marginBottom: 10,
     textAlign: 'center',
     fontStyle: 'italic',
@@ -102,33 +105,41 @@ const styles = StyleSheet.create({
   tabContainer: { 
     flexDirection: 'row', 
     justifyContent: 'space-around', 
-    width: '100%', marginBottom: 20 
+    width: '100%', 
+    marginBottom: 20 
   },
   tabText: { 
-    fontSize: 14, 
-    color: '#888', 
-    paddingHorizontal: 8 
+    fontSize: 15,
+    color: '#3B3356',
+    paddingHorizontal: 8,
+    fontStyle: 'italic'
   },
   activeTab: { 
-    color: '#ba1fa4', 
+    color: '#1E1924', 
     fontWeight: 'bold', 
     textDecorationLine: 'underline' 
+  },
+  box: {
+    width: 360,
+    backgroundColor: '#F3ECE4',
+    padding: 20,
+    marginBottom: -20
   },
   progressBar: { 
     marginVertical: 10 
   },
   percentText: { 
-    fontSize: 12, 
-    color: '#666', 
-    marginBottom: 10 
+    fontSize: 14, 
+    color: '#3B3356', 
+    marginBottom: 10,
+    textAlign: 'center'
   },
   promptBox: {
-    borderColor: '#ba1fa4',
+    borderColor: '#9D9D9D',
     borderWidth: 2,
     borderRadius: 12,
     padding: 20,
-    marginTop: 20,
-    backgroundColor: '#fff',
+    marginTop: 10,
     minHeight: 120,
     justifyContent: 'center',
     width: '100%',
@@ -136,18 +147,21 @@ const styles = StyleSheet.create({
   promptText: { 
     fontSize: 16, 
     textAlign: 'center', 
-    color: '#333' 
+    color: '#3B3356' 
   },
   proceedButton: {
+    width: 120,
     marginTop: 30,
-    backgroundColor: '#ba1fa4',
+    backgroundColor: '#F34BC0',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
+    marginLeft: 100
   },
   buttonText: { 
-    color: 'white', 
-    fontWeight: 'bold', 
-    fontSize: 16 
+    color: '#F3ECE4',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 17
   },
 });

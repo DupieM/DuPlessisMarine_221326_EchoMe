@@ -35,20 +35,20 @@ const styles = StyleSheet.create({
    headerContent: {
     width: 300,
     height: 160,
-    marginBottom: 20
+    marginBottom: 30
   },
   pageTitle: {
     fontSize: 50,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#1E1924',
     marginBottom: 10,
     textAlign: 'center',
     fontStyle: 'italic'
   },
   descriptionText: {
     fontSize: 22,
-    color: 'white',
-    marginBottom: 20,
+    color: '#1E1924',
+    marginBottom: 40,
   },
    contentContainer: {
     width: 320,

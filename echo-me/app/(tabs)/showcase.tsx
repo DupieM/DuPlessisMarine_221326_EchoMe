@@ -48,32 +48,35 @@ const projects = ShowcaseData[currentTab];
         ))}
       </View>
 
-      <Progress.Bar
-        progress={(progressIndex + 1) / projects.length}
-        width={300}
-        height={10}
-        color="#ba1fa4"
-        borderRadius={5}
-        style={{ marginBottom: 10 }}
-      />
-      <Text style={styles.percentText}>
-        {Math.round(((progressIndex + 1) / projects.length) * 100)}%
-      </Text>
 
-      <View style={styles.projectCard}>
-        <Image source={{ uri: projects[progressIndex].image }} style={styles.projectImage} />
-        <Text style={styles.projectName}>{projects[progressIndex].name}</Text>
-        <Text style={styles.projectDescription}>{projects[progressIndex].description}</Text>
-      </View>
+      <View style={styles.box}>
+        <Progress.Bar
+          progress={(progressIndex + 1) / projects.length}
+          width={320}
+          height={15}
+          color="#5C319A"
+          borderRadius={8}
+          style={{ marginBottom: 10 }}
+        />
+        <Text style={styles.percentText}>
+          {Math.round(((progressIndex + 1) / projects.length) * 100)}%
+        </Text>
 
-      <View style={styles.navigationButtons}>
-        <TouchableOpacity onPress={handlePrev} disabled={progressIndex === 0} style={[styles.navButton, progressIndex === 0 && styles.disabled]}>
-          <Text style={styles.buttonText}>Previous</Text>
-        </TouchableOpacity>
+        <View style={styles.projectCard}>
+          <Image source={{ uri: projects[progressIndex].image }} style={styles.projectImage} />
+          <Text style={styles.projectName}>{projects[progressIndex].name}</Text>
+          <Text style={styles.projectDescription}>{projects[progressIndex].description}</Text>
+        </View>
 
-        <TouchableOpacity onPress={handleNext} disabled={progressIndex === projects.length - 1} style={[styles.navButton, progressIndex === projects.length - 1 && styles.disabled]}>
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
+        <View style={styles.navigationButtons}>
+          <TouchableOpacity onPress={handlePrev} disabled={progressIndex === 0} style={[styles.navButton, progressIndex === 0 && styles.disabled]}>
+            <Text style={styles.buttonText}>Previous</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleNext} disabled={progressIndex === projects.length - 1} style={[styles.navButton, progressIndex === projects.length - 1 && styles.disabled]}>
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -82,55 +85,62 @@ const projects = ShowcaseData[currentTab];
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#A6BCE6',
     alignItems: 'center',
   },
   pageTitle: {
-    fontSize: 40,
+    fontSize: 60,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#1E1924',
     marginBottom: 10,
     textAlign: 'center',
     fontStyle: 'italic',
   },
   descriptionText: {
-    fontSize: 18,
-    color: '#555',
+    fontSize: 23,
+    color: '#1E1924',
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   tabContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     flexWrap: 'wrap',
     gap: 12,
   },
   tabText: {
     fontSize: 16,
-    color: '#999',
+    color: '#3B3356',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
+    fontStyle: 'italic'
   },
   activeTab: {
-    color: '#ba1fa4',
+    color: '#1E1924',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
+  box: {
+    width: 360,
+    backgroundColor: '#F3ECE4',
+    padding: 20,
+    marginBottom: -20
+  },
   percentText: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 14,
+    color: '#3B3356',
+    textAlign: 'center',
     marginBottom: 10,
   },
   projectCard: {
     borderWidth: 1,
-    borderColor: '#ba1fa4',
+    borderColor: '#9D9D9D',
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
     alignItems: 'center',
-    backgroundColor: '#fdfdfd',
     width: '100%',
   },
   projectImage: {
@@ -142,30 +152,35 @@ const styles = StyleSheet.create({
   projectName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#3B3356',
     marginBottom: 4,
   },
   projectDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#3B3356',
     textAlign: 'center',
   },
   navigationButtons: {
-    flexDirection: 'row',
-    gap: 10,
+    width: 110,
     marginTop: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 15,
+    marginLeft: 55
   },
   navButton: {
-    backgroundColor: '#ba1fa4',
+    backgroundColor: '#F34BC0',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: '#F3ECE4',
     fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 17
   },
   disabled: {
-    opacity: 0.5,
+    opacity: 0.3,
   },
 });

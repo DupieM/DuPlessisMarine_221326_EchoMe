@@ -12,7 +12,7 @@ export default function HomeScreen() {
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
         <View style={styles.textcontainer}>
-          <Image source={require('../../assets/images/adaptive-icon.png')} style={styles.image} />
+          <Image source={require('../../assets/images/Avatar.png')} style={styles.image} />
           <Text style={styles.text}>
             <Text style={styles.hi}>Hi, I’m{'\n'}</Text>
             <Text style={styles.name}>Lila Botha</Text>
@@ -37,6 +37,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'center',
+    backgroundColor: '#A6BCE6'
   },
   textcontainer: {
     width: 340,
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginTop: -135,
     marginLeft: 180,
-    color: 'white'
+    color: '#1E1924'
   },
   hi: {
     fontSize: 30,
@@ -71,6 +72,6 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 22.5,
     textAlign: 'center',
-    color: 'white'
+    color: '#1E1924'
   }
 });

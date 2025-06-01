@@ -1,26 +1,70 @@
-// data/ShowcaseData.ts
 export const ShowcaseData = {
   'UX Design': [
     {
-      name: 'Project 1',
-      description: 'A UX case study',
+      name: 'Saqqara',
+      description: '???',
+      image: 'https://za.pinterest.com/pin/5207355814568963/'
+    },
+    {
+      name: 'Moodality',
+      description: '???',
       image: 'https://via.placeholder.com/150'
     },
     {
-      name: 'Project 2',
-      description: 'Another UX exploration',
+      name: 'CC Motors',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'Recipe Assist',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'Omnitrip',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'Market Mingle',
+      description: '???',
       image: 'https://via.placeholder.com/150'
     }
   ],
   'Interactive Development': [
     {
-      name: 'Dev Project 1',
-      description: 'Built with React Native',
+      name: 'On The Go',
+      description: '???',
       image: 'https://via.placeholder.com/150'
     },
     {
-      name: 'Dev Project 2',
-      description: '3D Web Project',
+      name: 'CodeGenius',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: '&ME Entertainment',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'FunRun',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'Astro',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'CarbonTrack',
+      description: '???',
+      image: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'The Thinking Cabinet',
+      description: '???',
       image: 'https://via.placeholder.com/150'
     }
   ]

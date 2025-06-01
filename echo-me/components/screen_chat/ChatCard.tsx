@@ -105,9 +105,11 @@ export function ChatCard() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f2ede8',
-    borderRadius: 15,
+    borderRadius: 5,
     padding: 10,
-    height: 370,
+    height: 450,
+    width: 340,
+    marginLeft: -20
   },
   tabs: {
     flexDirection: 'row',
@@ -163,6 +165,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     backgroundColor: '#e157c4',
     padding: 10,
-    borderRadius: 25
+    borderRadius: 20,
+    width: 50,
+    alignItems: 'center'
   }
 });

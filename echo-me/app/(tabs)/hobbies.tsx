@@ -42,14 +42,14 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 50,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#1E1924',
     marginBottom: 10,
     textAlign: 'center',
     fontStyle: 'italic'
   },
   descriptionText: {
     fontSize: 23,
-    color: 'white',
+    color: '#1E1924',
     marginBottom: 20,
   },
   contentContainer: {

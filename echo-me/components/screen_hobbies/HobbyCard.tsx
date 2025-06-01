@@ -19,7 +19,7 @@ export function HobbyCard({ imageSource, description }: HobbyCardProps) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#F0F8FF', // AliceBlue, a very light blue for the card
+    backgroundColor: '#F3ECE4', // AliceBlue, a very light blue for the card
     borderRadius: 15,
     padding: 15,
     alignItems: 'center',
