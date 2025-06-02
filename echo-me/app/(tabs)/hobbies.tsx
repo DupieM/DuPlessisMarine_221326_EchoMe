@@ -1,13 +1,16 @@
-import { Image, StyleSheet, Platform, View, Text } from 'react-native'; // Added View
+import React, { useState } from 'react';
+import { Image, StyleSheet, Platform, View, Text } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { HobbyDropdown } from '@/components/screen_hobbies/HobbyDropdown';
 import { HobbyCard } from '@/components/screen_hobbies/HobbyCard';
-
+import { ShowcaseData } from '@/components/screen_hobbies/HobbyPrompt'; // make sure this is correct
 
 export default function HobbiesScreen() {
+  const [selectedHobby, setSelectedHobby] = useState(ShowcaseData.Hobby[0]);
+
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
@@ -19,16 +22,21 @@ export default function HobbiesScreen() {
         </View>
 
         <View style={styles.contentContainer}>
-          <HobbyDropdown />
+          <HobbyDropdown
+            options={ShowcaseData.Hobby}
+            onSelect={setSelectedHobby}
+            selected={selectedHobby}
+          />
           <HobbyCard
-            imageSource={require('../../assets/images/adaptive-icon.png')}
-            description="Description of hobby"
+            imageSource={selectedHobby.image}
+            description={selectedHobby.description}
           />
         </View>
       </ThemedView>
     </ParallaxScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   titleContainer: {

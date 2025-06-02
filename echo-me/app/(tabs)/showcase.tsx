@@ -2,7 +2,7 @@ import { ShowcaseData } from '@/components/screen_showcase/ShowcasePrompt';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import * as Progress from 'react-native-progress';
-
+import { Linking } from 'react-native';
 
 
 export default function ShowcaseScreen() {
@@ -63,9 +63,18 @@ const projects = ShowcaseData[currentTab];
         </Text>
 
         <View style={styles.projectCard}>
-          <Image source={{ uri: projects[progressIndex].image }} style={styles.projectImage} />
+          <Image source={projects[progressIndex].image} style={styles.projectImage} />
           <Text style={styles.projectName}>{projects[progressIndex].name}</Text>
           <Text style={styles.projectDescription}>{projects[progressIndex].description}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(projects[progressIndex].link);
+            }}
+          >
+            <Text style={styles.platformLink}>
+              {projects[progressIndex].platform} ↗
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.navigationButtons}>
@@ -144,10 +153,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   projectImage: {
-    width: 200,
-    height: 120,
+    width: 280,
+    height: 220,
     borderRadius: 8,
     marginBottom: 10,
+    resizeMode: 'contain'
   },
   projectName: {
     fontSize: 18,
@@ -160,6 +170,12 @@ const styles = StyleSheet.create({
     color: '#3B3356',
     textAlign: 'center',
   },
+  platformLink: {
+  color: '#5C319A',
+  marginTop: 10,
+  fontWeight: 'bold',
+  textDecorationLine: 'underline',
+},
   navigationButtons: {
     width: 110,
     marginTop: 10,

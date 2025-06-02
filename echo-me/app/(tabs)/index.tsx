@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Platform } from 'react-native';
-
+import { View, Text, Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import ExploreSection from '@/components/screen_home/ExploreSection';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
@@ -27,7 +28,19 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        <ExploreSection />
+        <View style={styles.container}>
+          <Text style={styles.title}>Continue to Explore</Text>
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/journey')}>
+            <Text style={styles.texttwo}>My Journey</Text>
+            <Image source={require('../../assets/images/Books.png')} style={styles.icon} />
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.buttontwo} onPress={() => router.push('/showcase')}>
+            <Text style={styles.texttwo}>Showcase</Text>
+            <Image source={require('../../assets/images/art.png')} style={styles.icontwo} />
+          </TouchableOpacity>
+         
+        </View>
   
       </ThemedView>
     </ParallaxScrollView>
@@ -73,5 +86,48 @@ const styles = StyleSheet.create({
     fontSize: 22.5,
     textAlign: 'center',
     color: '#1E1924'
-  }
+  },
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    gap: 12,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '600',
+    marginBottom: 8,
+    marginTop: 20,
+    color: '#1E1924'
+  },
+  button: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: "#ED4FB3"
+  },
+  buttontwo: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: "#47A9F5"
+  },
+  texttwo: {
+    fontSize: 25,
+    color: '#000',
+    fontWeight: '500',
+  },
+  icon: {
+    width: 62,
+    height: 62,
+  },
+  icontwo: {
+    width: 70,
+    height: 62,
+  },
 });

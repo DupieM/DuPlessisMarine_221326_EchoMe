@@ -1,40 +1,40 @@
 import React from 'react';
-import { StyleSheet, Pressable, View } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { MaterialIcons } from '@expo/vector-icons';
+import { View, StyleSheet } from 'react-native';
+import { Picker } from '@react-native-picker/picker'; // install with: expo install @react-native-picker/picker
 
-export function HobbyDropdown() {
-  const handlePress = () => {
-    console.log('Hobby Dropdown pressed!');
-  };
+interface HobbyDropdownProps {
+  options: { name: string }[];
+  onSelect: (item: any) => void;
+  selected: any;
+}
 
+export function HobbyDropdown({ options, onSelect, selected }: HobbyDropdownProps) {
   return (
-    <Pressable onPress={handlePress} style={styles.dropdownButton}>
-      <ThemedText style={styles.dropdownText}>Hobby Name</ThemedText>
-      <MaterialIcons name="keyboard-arrow-down" size={24} color="white" />
-    </Pressable>
+    <View style={styles.dropdownContainer}>
+      <Picker
+        selectedValue={selected.name}
+        onValueChange={(itemValue) => {
+          const selectedOption = options.find(opt => opt.name === itemValue);
+          if (selectedOption) onSelect(selectedOption);
+        }}
+        style={styles.picker}
+      >
+        {options.map((option, index) => (
+          <Picker.Item key={index} label={option.name} value={option.name} />
+        ))}
+      </Picker>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  dropdownButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  dropdownContainer: {
     backgroundColor: '#FF69B4',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
     borderRadius: 25,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
-  dropdownText: {
+  picker: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    paddingHorizontal: 20,
   },
 });
