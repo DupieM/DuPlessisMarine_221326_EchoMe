@@ -6,6 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/images/Logo.png",
     "scheme": "myapp",
+    "splash": {
+      "image": "./assets/images/Logo.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#A6BCE6"
+    },
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
