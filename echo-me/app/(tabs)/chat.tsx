@@ -15,7 +15,7 @@ export default function TabTwoScreen() {
         <View style={styles.headerContent}>
           <Text style={styles.pageTitle}>Chat</Text>
           <Text style={styles.descriptionText}>
-            Here you can talk to ask about career opportunities, resources to use and receive advice or guidance.
+            Talk to me about my journey or career opportunities, resources to use or ask for advice or guidance on your journey
           </Text>
         </View>
 
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#1E1924',
     marginBottom: 40,
+    textAlign: 'justify'
   },
    contentContainer: {
     width: 320,

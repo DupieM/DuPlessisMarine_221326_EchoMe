@@ -17,7 +17,7 @@ export default function HobbiesScreen() {
         <View style={styles.headerContent}>
           <Text style={styles.pageTitle}>My Hobbies</Text>
           <Text style={styles.descriptionText}>
-            Here you can view a list of all the hobbies that I like to do in my free time.
+            View a list of my hobbies that I like to do in my free time
           </Text>
         </View>
 

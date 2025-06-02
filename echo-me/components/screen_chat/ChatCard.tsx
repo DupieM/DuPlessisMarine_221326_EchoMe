@@ -71,12 +71,14 @@ export function ChatCard() {
   return (
     <View style={styles.container}>
       <View style={styles.tabs}>
-        <TouchableOpacity onPress={() => setTab('chat')} style={[styles.tab, tab === 'chat' && styles.activeTab]}>
-          <Text style={styles.tabText}>Chat</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => setTab('journey')} style={[styles.tab, tab === 'journey' && styles.activeTab]}>
-          <Text style={styles.tabText}>Journey</Text>
+          <Text style={styles.tabText}>My Journey</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setTab('chat')} style={[styles.tab, tab === 'chat' && styles.activeTab]}>
+          <Text style={styles.tabText}>Ask Me Anything</Text>
+          {/* Guidence Hub */}
+        </TouchableOpacity>
+        
       </View>
 
       <ScrollView style={styles.chatBox}>

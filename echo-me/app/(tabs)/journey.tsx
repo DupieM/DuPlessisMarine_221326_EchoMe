@@ -47,9 +47,16 @@ export default function JourneyScreen() {
     }
   };
 
+    const handlePrev = () => {
+    if (progressIndex > 0) {
+      setProgressIndex(progressIndex - 1);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.pageTitle}>My Journey</Text>
+      <Text style={styles.descriptionText}>Explore the various learning elements during my studies</Text>
       <View style={styles.tabContainer}>
         {tabs.map(tab => (
           <TouchableOpacity key={tab} onPress={() => {
@@ -79,6 +86,10 @@ export default function JourneyScreen() {
           <Text style={styles.promptText}>{currentPrompt}</Text>
         </View>
 
+        <TouchableOpacity onPress={handlePrev} disabled={progressIndex === 0} style={[styles.navButton, progressIndex === 0 && styles.disabled]}>
+          <Text style={styles.buttonText}>Previous</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
           <Text style={styles.buttonText}>Proceed</Text>
         </TouchableOpacity>
@@ -101,6 +112,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     fontStyle: 'italic',
+  },
+  descriptionText: {
+    fontSize: 23,
+    color: '#1E1924',
+    marginBottom: 20,
+    textAlign: 'left',
   },
   tabContainer: { 
     flexDirection: 'row', 
@@ -145,7 +162,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   promptText: { 
-    fontSize: 16, 
+    fontSize: 22, 
     textAlign: 'center', 
     color: '#3B3356' 
   },
@@ -163,5 +180,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 17
+  },
+   navButton: {
+    backgroundColor: '#F34BC0',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  disabled: {
+    opacity: 0.3,
   },
 });

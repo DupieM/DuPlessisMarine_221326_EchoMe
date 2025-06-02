@@ -7,7 +7,7 @@ export default function NextStepScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>What’s next?</Text>
-      <Text style={styles.subtitle}>Do you wanna chat about something specific to you (University, general questions).</Text>
+      <Text style={styles.subtitle}>Do you want to chat about my journey or ask for guidance</Text>
       <TouchableOpacity style={styles.option} onPress={() => router.push('/chat')}>
         <Text style={styles.optionText}>Chat</Text>
       </TouchableOpacity>
@@ -15,7 +15,7 @@ export default function NextStepScreen() {
       <Text style={styles.titletwo}>or</Text>
 
       <Text style={styles.subtitletwo}>
-        Do you want to explore my the hobbies I have or view and projects I made.
+        Do you want to explore my university projects or view my hobbies 
       </Text>
       <TouchableOpacity style={styles.option} onPress={() => router.push('/showcase')}>
         <Text style={styles.optionText}>Projects</Text>
