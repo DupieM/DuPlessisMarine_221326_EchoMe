@@ -13,7 +13,7 @@
 <p align="center">
 
   <a href="https://github.com/DupieM/DuPlessisMarine_221326_EchoMe">
-    <img src="" alt="Logo" width="240" height="130">
+    <img src="../DuPlessisMarine_221326_EchoMe/echo-me/assets/images/Logo.png" alt="Logo" width="240" height="130">
   </a>
   
   <h3 align="center">EchoMe</h3>
