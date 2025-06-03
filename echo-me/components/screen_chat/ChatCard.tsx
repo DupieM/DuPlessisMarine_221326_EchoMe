@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { journeyPrompt } from './ChatPrompt';
 
@@ -7,66 +7,73 @@ export function ChatCard() {
   const [input, setInput] = useState('');
   const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([]);
   const [journeyMessages, setJourneyMessages] = useState<{ role: string, content: string }[]>([]);
+  const scrollViewRef = useRef<ScrollView>(null);
 
- const sendMessage = async () => {
-  if (!input) return;
+  const sendMessage = async () => {
+    if (!input) return;
 
-  const userMessage = { role: 'user', content: input };
+    const userMessage = { role: 'user', content: input };
 
-  const currentMessages = tab === 'journey' ? journeyMessages : chatMessages;
-  const setCurrentMessages = tab === 'journey' ? setJourneyMessages : setChatMessages;
+    const currentMessages = tab === 'journey' ? journeyMessages : chatMessages;
+    const setCurrentMessages = tab === 'journey' ? setJourneyMessages : setChatMessages;
 
-  const prompt =
-    tab === 'journey'
-      ? journeyPrompt(input) + '\nPlease limit your response to no more than 60 words.'
-      : input + '\nPlease limit your response to no more than 60 words.';
+    const prompt =
+      tab === 'journey'
+        ? journeyPrompt(input) + '\nPlease limit your response to no more than 60 words.'
+        : input + '\nPlease limit your response to no more than 60 words.';
 
-  const updatedMessages = [...currentMessages, userMessage];
-  setCurrentMessages(updatedMessages); // Add user's message to state
+    // Optimistically add user message for immediate display
+    setCurrentMessages(prevMessages => [...prevMessages, userMessage]); // Use functional update
 
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content:
-              tab === 'journey'
-                ? 'You are a university student giving advice based on their personal university experience.'
-                : 'You are a helpful and knowledgeable AI assistant.'
-          },
-          ...updatedMessages,
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7
-      })
-    });
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [
+            {
+              role: 'system',
+              content:
+                tab === 'journey'
+                  ? 'You are a university student giving advice based on their personal university experience.'
+                  : 'You are a helpful and knowledgeable AI assistant.'
+            },
+            ...currentMessages, // Send previous messages for context
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7
+        })
+      });
 
-    const data = await response.json();
-    console.log('OpenAI API Response:', data);
+      const data = await response.json();
+      console.log('OpenAI API Response:', data);
 
-    if (!data.choices || !data.choices.length) {
-      throw new Error('Invalid OpenAI response');
+      if (!data.choices || !data.choices.length) {
+        throw new Error('Invalid OpenAI response');
+      }
+
+      const reply = data.choices[0].message.content || 'No response';
+      setCurrentMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+    } catch (err) {
+      console.error('Chat Error:', err);
+      setCurrentMessages(prev => [...prev, { role: 'assistant', content: 'Something went wrong while contacting OpenAI.' }]);
     }
 
-    const reply = data.choices[0].message.content || 'No response';
-    setCurrentMessages(prev => [...prev, { role: 'assistant', content: reply }]);
-  } catch (err) {
-    console.error('Chat Error:', err);
-    setCurrentMessages(prev => [...prev, { role: 'assistant', content: 'Something went wrong while contacting OpenAI.' }]);
-  }
-
-  setInput('');
-};
-
+    setInput('');
+  };
 
   const messages = tab === 'journey' ? journeyMessages : chatMessages;
+
+  // This useEffect is sufficient for auto-scrolling to the end when new messages arrive.
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   return (
     <View style={styles.container}>
@@ -76,13 +83,14 @@ export function ChatCard() {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setTab('chat')} style={[styles.tab, tab === 'chat' && styles.activeTab]}>
           <Text style={styles.tabText}>Ask Me Anything</Text>
-          {/* Guidence Hub */}
         </TouchableOpacity>
-        
       </View>
 
-      <ScrollView style={styles.chatBox}>
-        {(tab === 'journey' ? journeyMessages : chatMessages).map((msg, idx) => (
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.chatBox}
+      >
+        {messages.map((msg, idx) => (
           <View key={idx} style={msg.role === 'user' ? styles.userMsg : styles.aiMsg}>
             <Text style={styles.msgText}>{msg.content}</Text>
           </View>
@@ -134,7 +142,10 @@ const styles = StyleSheet.create({
   },
   chatBox: {
     flex: 1,
-    marginBottom: 10
+    // overflowY: 'auto' is for web, not typically needed for React Native ScrollView
+  },
+  scrollContent: {
+    paddingVertical: 10
   },
   userMsg: {
     alignSelf: 'flex-end',
@@ -154,6 +165,7 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   inputRow: {
+    marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center'
   },

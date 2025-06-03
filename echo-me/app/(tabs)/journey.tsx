@@ -1,99 +1,130 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, Dimensions, TouchableOpacity } from 'react-native';
 import * as Progress from 'react-native-progress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { journeyPrompt, journeyData } from '@/components/screen_chat/ChatPrompt';
+import { journeyData } from '@/components/screen_chat/ChatPrompt';
 
-
-// Define allowed journey years
 type JourneyYear = '1st year' | '2nd year' | '3rd year' | 'Post-Graduete';
-
-// Typed array of tabs
 const tabs: JourneyYear[] = ['1st year', '2nd year', '3rd year', 'Post-Graduete'];
+const { width } = Dimensions.get('window');
 
 export default function JourneyScreen() {
   const [currentTab, setCurrentTab] = useState<JourneyYear>('1st year');
   const [progressIndex, setProgressIndex] = useState(0);
   const router = useRouter();
+  const flatListRef = useRef<FlatList>(null);
 
   const prompts = journeyData[currentTab];
-  const currentPrompt = prompts[progressIndex];
-
-  const saveProgress = async () => {
-    await AsyncStorage.setItem('journeyProgress', JSON.stringify({ tab: currentTab, index: progressIndex }));
-  };
-
-  const loadProgress = async () => {
-    const stored = await AsyncStorage.getItem('journeyProgress');
-    if (stored) {
-      const { tab, index } = JSON.parse(stored);
-      setCurrentTab(tab);
-      setProgressIndex(index);
-    }
-  };
 
   useEffect(() => {
+    const loadProgress = async () => {
+      const stored = await AsyncStorage.getItem('journeyProgress');
+      if (stored) {
+        const { tab, index } = JSON.parse(stored);
+        setCurrentTab(tab);
+        setProgressIndex(index);
+        flatListRef.current?.scrollToIndex({ index, animated: false });
+      }
+    };
     loadProgress();
   }, []);
 
-  const handleProceed = () => {
-    const nextIndex = progressIndex + 1;
-    if (nextIndex < prompts.length) {
-      setProgressIndex(nextIndex);
-      saveProgress();
+  const saveProgress = async (index: number) => {
+    await AsyncStorage.setItem(
+      'journeyProgress',
+      JSON.stringify({ tab: currentTab, index })
+    );
+  };
+
+  const ITEM_WIDTH = 270 + 20; // 270 width + 20 horizontal margin
+
+  const handleScrollEnd = (event: any) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / ITEM_WIDTH);
+    console.log('Scrolled to index:', index, 'prompts length:', prompts.length);
+
+    if (index === prompts.length) {
+      console.log('Navigating to nextstep');
+      router.push('/nextstep');
     } else {
-      router.push('/nextstep'); // ✅ navigates to next screen
+      setProgressIndex(index);
+      saveProgress(index);
     }
   };
 
-    const handlePrev = () => {
-    if (progressIndex > 0) {
-      setProgressIndex(progressIndex - 1);
+  const renderItem = ({ item }: { item: string }) => {
+    if (item === '__end__') {
+      return (
+        <View style={styles.promptBox}>
+          <Text style={styles.promptText}>Loading next step...</Text>
+        </View>
+      );
     }
+
+    return (
+      <View style={styles.promptBox}>
+        <Text style={styles.promptText}>{item}</Text>
+      </View>
+    );
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.pageTitle}>My Journey</Text>
       <Text style={styles.descriptionText}>Explore the various learning elements during my studies</Text>
+
       <View style={styles.tabContainer}>
         {tabs.map(tab => (
           <TouchableOpacity key={tab} onPress={() => {
             setCurrentTab(tab);
             setProgressIndex(0);
+            flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
           }}>
-            <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>{tab}</Text>
+            <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>
+              {tab}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-
       <View style={styles.box}>
-        <Progress.Bar
-          progress={(progressIndex + 1) / prompts.length}
-          width={320}
-          height={15}
-          color="#5C319A"
-          borderRadius={8}
-          style={styles.progressBar}
-        />
-        <Text style={styles.percentText}>
-          {Math.round(((progressIndex + 1) / prompts.length) * 100)}%
-        </Text>
+        <View style={styles.carouselContainer}>
+          {/* Progress Bar Container */}
+          <View style={styles.progressBarContainer}>
+            <Progress.Bar
+              progress={(progressIndex + 1) / prompts.length}
+              width={360}
+              height={30}
+              color="#5C319A"
+              borderRadius={20}
+              style={styles.verticalProgressBar}
+            />
+          </View>
 
-        <View style={styles.promptBox}>
-          <Text style={styles.promptText}>{currentPrompt}</Text>
+          {/* FlatList Container */}
+          <View style={styles.flatListContainer}>
+            <FlatList
+              ref={flatListRef}
+              data={[...prompts, '__end__']}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={renderItem}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={handleScrollEnd}
+            />
+          </View>
         </View>
 
-        <TouchableOpacity onPress={handlePrev} disabled={progressIndex === 0} style={[styles.navButton, progressIndex === 0 && styles.disabled]}>
-          <Text style={styles.buttonText}>Previous</Text>
+        {/* Chat Button */}
+        <TouchableOpacity
+          style={styles.chatButton}
+          onPress={() => router.push('/chat')}
+        >
+          <Text style={styles.buttonText}>Go to Chat</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
-          <Text style={styles.buttonText}>Proceed</Text>
-        </TouchableOpacity>
-        </View>
+      </View>
     </View>
   );
 }
@@ -142,52 +173,68 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: -20
   },
+  carouselContainer: {
+    flexDirection: 'row',
+  },
+  progressBarContainer: {
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  flatListContainer: {
+    flex: 1,
+  },
+  verticalProgressBar: {
+    transform: [{ rotate: '-90deg' }],
+    marginRight: 10,
+    marginTop: 70
+  },
   progressBar: { 
     marginVertical: 10 
   },
-  percentText: { 
-    fontSize: 14, 
-    color: '#3B3356', 
-    marginBottom: 10,
-    textAlign: 'center'
-  },
   promptBox: {
+    width: 270,
     borderColor: '#9D9D9D',
     borderWidth: 2,
     borderRadius: 12,
     padding: 20,
-    marginTop: 10,
+    marginHorizontal: 10,
     minHeight: 120,
     justifyContent: 'center',
-    width: '100%',
   },
   promptText: { 
-    fontSize: 22, 
+    fontSize: 28, 
     textAlign: 'center', 
     color: '#3B3356' 
   },
-  proceedButton: {
-    width: 120,
-    marginTop: 30,
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 15
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#D3CBEA',
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: '#5C319A',
+  },
+  chatButton: {
+    marginTop: 25,
     backgroundColor: '#F34BC0',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
-    marginLeft: 100
+    alignSelf: 'center',
   },
   buttonText: { 
     color: '#F3ECE4',
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 17
-  },
-   navButton: {
-    backgroundColor: '#F34BC0',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-  },
-  disabled: {
-    opacity: 0.3,
   },
 });

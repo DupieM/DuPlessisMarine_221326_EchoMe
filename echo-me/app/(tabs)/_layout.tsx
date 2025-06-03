@@ -7,24 +7,42 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import HomeSvg from '../../assets/images/home.svg';
+import JourneySvg from '../../assets/images/journey.svg'; 
+import ChatSvg from '../../assets/images/chat.svg';      
+import HobbiesSvg from '../../assets/images/Mask group.svg'; 
+import ShowcaseSvg from '../../assets/images/projects.svg'; 
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+  // Define your colors
+  const activeIconColor = '#FFFFFF'; // White for active SVG
+  const inactiveIconColor = '#C5D5ED'; // Light blue/grey for inactive SVG
+  const tabBarBackgroundColor = '#5C319A'; // Deep purple for tab bar background
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
+            backgroundColor: tabBarBackgroundColor, 
           },
-          default: {},
+          default: {
+            backgroundColor: tabBarBackgroundColor, 
+          },
         }),
+
+        tabBarLabelStyle: {
+          color: inactiveIconColor,
+        },
+        tabBarActiveTintColor: activeIconColor,
+        tabBarInactiveTintColor: inactiveIconColor,
       }}>
       <Tabs.Screen
         name="index"
