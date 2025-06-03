@@ -1,28 +1,38 @@
+// app/showcase.tsx
 import { ShowcaseData } from '@/components/screen_showcase/ShowcasePrompt';
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList, ViewToken, Dimensions } from 'react-native';
 import * as Progress from 'react-native-progress';
-import { Linking } from 'react-native';
+import { router } from 'expo-router'; // Import the router
 
+const { width } = Dimensions.get('window');
 
 export default function ShowcaseScreen() {
- type ShowcaseCategory = keyof typeof ShowcaseData;
-const categories = Object.keys(ShowcaseData) as ShowcaseCategory[];
-const [currentTab, setCurrentTab] = useState<ShowcaseCategory>(categories[0]);
+  type ShowcaseCategory = keyof typeof ShowcaseData;
+  const categories = Object.keys(ShowcaseData) as ShowcaseCategory[];
+  const [currentTab, setCurrentTab] = useState<ShowcaseCategory>(categories[0]);
+  const projects = ShowcaseData[currentTab];
 
-const projects = ShowcaseData[currentTab];
-  const [progressIndex, setProgressIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef<FlatList>(null);
 
-  const handleNext = () => {
-    if (progressIndex < projects.length - 1) {
-      setProgressIndex(progressIndex + 1);
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      if (viewableItems.length > 0) {
+        setCurrentIndex(viewableItems[0].index ?? 0);
+      }
     }
-  };
+  ).current;
 
-  const handlePrev = () => {
-    if (progressIndex > 0) {
-      setProgressIndex(progressIndex - 1);
-    }
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
+
+  // Function to handle opening the URL in WebView using expo-router
+  const openLinkInApp = (url: string) => {
+    // Navigate to ShowcaseWebViewScreen and pass the URL as a query parameter
+    router.push({
+      pathname: '/ShowcaseWebViewScreen', // This matches your file name app/ShowcaseWebViewScreen.tsx
+      params: { url: url },
+    });
   };
 
   return (
@@ -38,7 +48,8 @@ const projects = ShowcaseData[currentTab];
             key={tab}
             onPress={() => {
               setCurrentTab(tab);
-              setProgressIndex(0);
+              setCurrentIndex(0);
+              flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
             }}
           >
             <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>
@@ -48,44 +59,40 @@ const projects = ShowcaseData[currentTab];
         ))}
       </View>
 
-
       <View style={styles.box}>
         <Progress.Bar
-          progress={(progressIndex + 1) / projects.length}
+          progress={(currentIndex + 1) / projects.length}
           width={320}
           height={15}
           color="#5C319A"
           borderRadius={8}
           style={{ marginBottom: 10 }}
         />
-        <Text style={styles.percentText}>
-          {Math.round(((progressIndex + 1) / projects.length) * 100)}%
-        </Text>
+        {/* <Text style={styles.percentText}>
+          {Math.round(((currentIndex + 1) / projects.length) * 100)}%
+        </Text> */}
 
-        <View style={styles.projectCard}>
-          <Image source={projects[progressIndex].image} style={styles.projectImage} />
-          <Text style={styles.projectName}>{projects[progressIndex].name}</Text>
-          <Text style={styles.projectDescription}>{projects[progressIndex].description}</Text>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(projects[progressIndex].link);
-            }}
-          >
-            <Text style={styles.platformLink}>
-              {projects[progressIndex].platform} ↗
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.navigationButtons}>
-          <TouchableOpacity onPress={handlePrev} disabled={progressIndex === 0} style={[styles.navButton, progressIndex === 0 && styles.disabled]}>
-            <Text style={styles.buttonText}>Previous</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleNext} disabled={progressIndex === projects.length - 1} style={[styles.navButton, progressIndex === projects.length - 1 && styles.disabled]}>
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
+        <FlatList
+          ref={flatListRef}
+          data={projects}
+          keyExtractor={(item, index) => `${item.name}-${index}`}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewConfigRef.current}
+          renderItem={({ item }) => (
+            <View style={[styles.projectCard, { width: width - 40 }]}>
+              <Image source={item.image} style={styles.projectImage} />
+              <Text style={styles.projectName}>{item.name}</Text>
+              <Text style={styles.projectDescription}>{item.description}</Text>
+              {/* Call the new openLinkInApp function */}
+              <TouchableOpacity onPress={() => openLinkInApp(item.link)}>
+                <Text style={styles.platformLink}>{item.platform} ↗</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
     </ScrollView>
   );
@@ -147,10 +154,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#9D9D9D',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 20,
+    padding: 13,
+    marginBottom: 10,
+    marginTop: 10,
     alignItems: 'center',
     width: '100%',
+    height: 500
   },
   projectImage: {
     width: 280,
@@ -160,43 +169,21 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   projectName: {
-    fontSize: 18,
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#3B3356',
     marginBottom: 4,
   },
   projectDescription: {
-    fontSize: 14,
+    fontSize: 20,
     color: '#3B3356',
     textAlign: 'center',
   },
   platformLink: {
-  color: '#5C319A',
-  marginTop: 10,
-  fontWeight: 'bold',
-  textDecorationLine: 'underline',
-},
-  navigationButtons: {
-    width: 110,
+    fontSize: 18,
+    color: '#5C319A',
     marginTop: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 15,
-    marginLeft: 55
-  },
-  navButton: {
-    backgroundColor: '#F34BC0',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: '#F3ECE4',
     fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 17
-  },
-  disabled: {
-    opacity: 0.3,
-  },
+    textDecorationLine: 'underline',
+  }
 });

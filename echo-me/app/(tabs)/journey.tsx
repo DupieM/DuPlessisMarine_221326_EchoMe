@@ -7,66 +7,54 @@ import { journeyData } from '@/components/screen_chat/ChatPrompt';
 
 type JourneyYear = '1st year' | '2nd year' | '3rd year' | 'Post-Graduete';
 const tabs: JourneyYear[] = ['1st year', '2nd year', '3rd year', 'Post-Graduete'];
-const { width } = Dimensions.get('window');
+const screenWidth = Dimensions.get('window').width;
 
 export default function JourneyScreen() {
   const [currentTab, setCurrentTab] = useState<JourneyYear>('1st year');
   const [progressIndex, setProgressIndex] = useState(0);
   const router = useRouter();
-  const flatListRef = useRef<FlatList>(null);
 
   const prompts = journeyData[currentTab];
 
-  useEffect(() => {
-    const loadProgress = async () => {
-      const stored = await AsyncStorage.getItem('journeyProgress');
-      if (stored) {
-        const { tab, index } = JSON.parse(stored);
-        setCurrentTab(tab);
-        setProgressIndex(index);
-        flatListRef.current?.scrollToIndex({ index, animated: false });
+  const viewabilityConfig = {
+    viewAreaCoveragePercentThreshold: 50,
+  };
+
+  const hasNavigated = useRef(false);
+
+  const onViewableItemsChanged = React.useRef(({ viewableItems }: any) => {
+  if (viewableItems.length > 0) {
+    const index = viewableItems[0].index;
+    if (index !== null) {
+      setProgressIndex(index);
+      saveProgress(index);
+
+      // If it's the last prompt, and hasn't navigated yet
+      if (index === prompts.length - 1 && !hasNavigated.current) {
+        hasNavigated.current = true; 
+        setTimeout(() => {
+          router.push('/nextstep');
+        }, 8000); 
       }
-    };
+    }
+  }
+}).current;
+
+  const saveProgress = async (index: number) => {
+    await AsyncStorage.setItem('journeyProgress', JSON.stringify({ tab: currentTab, index }));
+  };
+
+  useEffect(() => {
     loadProgress();
   }, []);
 
-  const saveProgress = async (index: number) => {
-    await AsyncStorage.setItem(
-      'journeyProgress',
-      JSON.stringify({ tab: currentTab, index })
-    );
-  };
-
-  const ITEM_WIDTH = 270 + 20; // 270 width + 20 horizontal margin
-
-  const handleScrollEnd = (event: any) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.round(offsetX / ITEM_WIDTH);
-    console.log('Scrolled to index:', index, 'prompts length:', prompts.length);
-
-    if (index === prompts.length) {
-      console.log('Navigating to nextstep');
-      router.push('/nextstep');
-    } else {
+  const loadProgress = async () => {
+    const stored = await AsyncStorage.getItem('journeyProgress');
+    if (stored) {
+      const { tab, index } = JSON.parse(stored);
+      setCurrentTab(tab);
       setProgressIndex(index);
-      saveProgress(index);
     }
-  };
-
-  const renderItem = ({ item }: { item: string }) => {
-    if (item === '__end__') {
-      return (
-        <View style={styles.promptBox}>
-          <Text style={styles.promptText}>Loading next step...</Text>
-        </View>
-      );
-    }
-
-    return (
-      <View style={styles.promptBox}>
-        <Text style={styles.promptText}>{item}</Text>
-      </View>
-    );
   };
 
   return (
@@ -76,54 +64,53 @@ export default function JourneyScreen() {
 
       <View style={styles.tabContainer}>
         {tabs.map(tab => (
-          <TouchableOpacity key={tab} onPress={() => {
-            setCurrentTab(tab);
-            setProgressIndex(0);
-            flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
-          }}>
-            <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>
-              {tab}
-            </Text>
+          <TouchableOpacity
+            key={tab}
+            onPress={() => {
+              setCurrentTab(tab);
+              setProgressIndex(0);
+            }}
+          >
+            <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>{tab}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
       <View style={styles.box}>
-        <View style={styles.carouselContainer}>
-          {/* Progress Bar Container */}
-          <View style={styles.progressBarContainer}>
-            <Progress.Bar
-              progress={(progressIndex + 1) / prompts.length}
-              width={360}
-              height={30}
-              color="#5C319A"
-              borderRadius={20}
-              style={styles.verticalProgressBar}
-            />
-          </View>
+        <Progress.Bar
+          progress={(progressIndex + 1) / prompts.length}
+          width={320}
+          height={15}
+          color="#5C319A"
+          borderRadius={8}
+          style={styles.progressBar}
+        />
 
-          {/* FlatList Container */}
-          <View style={styles.flatListContainer}>
-            <FlatList
-              ref={flatListRef}
-              data={[...prompts, '__end__']}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={renderItem}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              onMomentumScrollEnd={handleScrollEnd}
-            />
-          </View>
-        </View>
+        <FlatList
+          data={prompts}
+          keyExtractor={(_, index) => index.toString()}
+          horizontal
+          pagingEnabled
+          initialScrollIndex={progressIndex}
+          getItemLayout={(_, index) => ({
+            length: screenWidth - 10,
+            offset: (screenWidth - 30) * index,
+            index,
+          })}
+          renderItem={({ item }) => (
+            <View style={[styles.promptBox]}>
+              <Text style={styles.promptText}>{item}</Text>
+            </View>
+          )}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          showsHorizontalScrollIndicator={false}
+        />
 
-        {/* Chat Button */}
-        <TouchableOpacity
-          style={styles.chatButton}
-          onPress={() => router.push('/chat')}
-        >
+        <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/chat')}>
           <Text style={styles.buttonText}>Go to Chat</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -188,19 +175,20 @@ const styles = StyleSheet.create({
   verticalProgressBar: {
     transform: [{ rotate: '-90deg' }],
     marginRight: 10,
-    marginTop: 70
+    marginTop: 70,
   },
   progressBar: { 
     marginVertical: 10 
   },
   promptBox: {
-    width: 270,
+    marginTop: 15,
+    width: 300,
     borderColor: '#9D9D9D',
     borderWidth: 2,
     borderRadius: 12,
     padding: 20,
     marginHorizontal: 10,
-    minHeight: 120,
+    height: 300,
     justifyContent: 'center',
   },
   promptText: { 

@@ -76,50 +76,59 @@ export function ChatCard() {
   }, [messages]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.tabs}>
-        <TouchableOpacity onPress={() => setTab('journey')} style={[styles.tab, tab === 'journey' && styles.activeTab]}>
-          <Text style={styles.tabText}>My Journey</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setTab('chat')} style={[styles.tab, tab === 'chat' && styles.activeTab]}>
-          <Text style={styles.tabText}>Ask Me Anything</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={styles.mainbox}>
+      <View style={styles.container}>
+        <View style={styles.tabs}>
+          <TouchableOpacity onPress={() => setTab('journey')} style={[styles.tab, tab === 'journey' && styles.activeTab]}>
+            <Text style={styles.tabText}>My Journey</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setTab('chat')} style={[styles.tab, tab === 'chat' && styles.activeTab]}>
+            <Text style={styles.tabText}>Ask Me Anything</Text>
+          </TouchableOpacity>
+        </View>
 
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.chatBox}
-      >
-        {messages.map((msg, idx) => (
-          <View key={idx} style={msg.role === 'user' ? styles.userMsg : styles.aiMsg}>
-            <Text style={styles.msgText}>{msg.content}</Text>
-          </View>
-        ))}
-      </ScrollView>
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.chatBox}
+          contentContainerStyle={{ paddingBottom: 0 }} // Prevent overlap with input
+          keyboardShouldPersistTaps="handled"
+        >
+          {messages.map((msg, idx) => (
+            <View key={idx} style={msg.role === 'user' ? styles.userMsg : styles.aiMsg}>
+              <Text style={styles.msgText}>{msg.content}</Text>
+            </View>
+          ))}
+        </ScrollView>
 
-      <View style={styles.inputRow}>
-        <TextInput
-          value={input}
-          onChangeText={setInput}
-          style={styles.input}
-          placeholder="Message"
-        />
-        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-          <Text style={{ color: 'white' }}>➤</Text>
-        </TouchableOpacity>
+        <View style={styles.inputRow}>
+          <TextInput
+            value={input}
+            onChangeText={setInput}
+            style={styles.input}
+            placeholder="Message"
+          />
+          <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+            <Text style={{ color: 'white' }}>➤</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  mainbox: {
+    marginBottom: 30
+  },
   container: {
+    marginTop: 10,
     backgroundColor: '#f2ede8',
     borderRadius: 5,
     padding: 10,
-    height: 450,
+    flex: 1,
+    height: '100%',
     width: 340,
-    marginLeft: -20
+    marginLeft: -20,
   },
   tabs: {
     flexDirection: 'row',
@@ -141,7 +150,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   chatBox: {
-    flex: 1,
+    height: 300
     // overflowY: 'auto' is for web, not typically needed for React Native ScrollView
   },
   scrollContent: {
