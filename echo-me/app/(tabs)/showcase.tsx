@@ -4,6 +4,8 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList, ViewToken, Dimensions } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { router } from 'expo-router'; // Import the router
+// @ts-ignore
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width } = Dimensions.get('window');
 
@@ -93,6 +95,11 @@ export default function ShowcaseScreen() {
             </View>
           )}
         />
+
+        <View style={styles.swipeHint}>
+          <Icon name="arrow-forward-circle-outline" size={28} color="#5C319A" />
+          <Text style={styles.swipeHintText}>Swipe</Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -185,5 +192,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: 'bold',
     textDecorationLine: 'underline',
-  }
+  },
+  swipeHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  swipeHintText: {
+    marginLeft: 6,
+    color: '#5C319A',
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
 });

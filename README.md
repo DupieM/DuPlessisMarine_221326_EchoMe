@@ -134,7 +134,7 @@ To start the Expo app on a phone:
 ![??]()
 ### Home Screens
 
-??
+This screen welcomes users to EchoMe, where they are introduced to Lila Botha, the AI version of myself. It includes a message box explaining what users can do within the app.
 
 </br>
 
@@ -142,7 +142,7 @@ To start the Expo app on a phone:
 
 ### My Journey Screen
 
-??
+Here, users can explore my academic journey at Open Window. They can view my learnings year by year, and a button at the bottom leads to a chat where they can talk with me about my journey.
 
 </br>
 
@@ -150,7 +150,7 @@ To start the Expo app on a phone:
 
 ### Next Step Screen
 
-??
+This screen helps users decide what they’d like to do next as they navigate through the app.
 
 </br>
 
@@ -158,7 +158,7 @@ To start the Expo app on a phone:
 
 ### Chat Screen
 
-??
+Users can chat with me about the details of my academic journey—asking questions about each year's learnings. They can also interact with a general AI assistant to receive career advice or ask anything they're curious to learn.
 
 </br>
 
@@ -166,7 +166,7 @@ To start the Expo app on a phone:
 
 ### Hobbies Screen
 
-??
+This screen showcases my personal hobbies. Users can also engage in a conversation with me to learn more about these interests.
 
 </br>
 
@@ -174,8 +174,7 @@ To start the Expo app on a phone:
 
 ### Showcase Screen
 
-??
-
+Users can browse the projects I completed during my studies. These are divided into two categories: UX Design and Interactive Development. Each project includes a brief description and a link to my portfolio for more details
 
 <!-- CONCEPT PROCESS -->
 <!-- Briefly explain your concept ideation process -->
@@ -239,9 +238,9 @@ The `Development Process` is the technical implementations and functionality don
 
 `User Acceptance Testing` were conducted to establish working functionality by my peers.
 
-* `Peer One` did a unit test
-* `Peer Two` did a unit test
-* `Peer three` did a unit test
+* `Peer One` did a unit test 
+* `Peer Two` did a unit test 
+* `Peer three` did a unit test 
 
 ### Future Implementation
 <!-- stipulate functionality and improvements that can be implemented in the future. -->

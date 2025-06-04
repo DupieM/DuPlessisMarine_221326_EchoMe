@@ -4,6 +4,8 @@ import * as Progress from 'react-native-progress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { journeyData } from '@/components/screen_chat/ChatPrompt';
+// @ts-ignore
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type JourneyYear = '1st year' | '2nd year' | '3rd year' | 'Post-Graduete';
 const tabs: JourneyYear[] = ['1st year', '2nd year', '3rd year', 'Post-Graduete'];
@@ -14,7 +16,7 @@ export default function JourneyScreen() {
   const [progressIndex, setProgressIndex] = useState(0);
   const router = useRouter();
 
-  const prompts = journeyData[currentTab];
+  const prompts = [...journeyData[currentTab], '__last_slide__'];
 
   const viewabilityConfig = {
     viewAreaCoveragePercentThreshold: 50,
@@ -28,14 +30,6 @@ export default function JourneyScreen() {
     if (index !== null) {
       setProgressIndex(index);
       saveProgress(index);
-
-      // If it's the last prompt, and hasn't navigated yet
-      if (index === prompts.length - 1 && !hasNavigated.current) {
-        hasNavigated.current = true; 
-        setTimeout(() => {
-          router.push('/nextstep');
-        }, 8000); 
-      }
     }
   }
 }).current;
@@ -97,15 +91,36 @@ export default function JourneyScreen() {
             offset: (screenWidth - 30) * index,
             index,
           })}
-          renderItem={({ item }) => (
-            <View style={[styles.promptBox]}>
-              <Text style={styles.promptText}>{item}</Text>
-            </View>
-          )}
+          renderItem={({ item }) => {
+            if (item === '__last_slide__') {
+              return (
+                <View style={[styles.promptBox, { backgroundColor: '#DDECF6' }]}>
+                  <Text style={[styles.promptText, { fontSize: 24 }]}>You're all set!</Text>
+                  <TouchableOpacity
+                    style={[styles.chatButton, { marginTop: 20 }]}
+                    onPress={() => router.push('/nextstep')}
+                  >
+                    <Text style={styles.buttonText}>Continue</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            }
+
+            return (
+              <View style={[styles.promptBox]}>
+                <Text style={styles.promptText}>{item}</Text>
+              </View>
+            );
+          }}
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           showsHorizontalScrollIndicator={false}
         />
+
+        <View style={styles.swipeHint}>
+          <Icon name="arrow-forward-circle-outline" size={28} color="#5C319A" />
+          <Text style={styles.swipeHintText}>Swipe</Text>
+        </View>
 
         <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/chat')}>
           <Text style={styles.buttonText}>Go to Chat</Text>
@@ -212,17 +227,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#5C319A',
   },
   chatButton: {
-    marginTop: 25,
+    marginTop: 5,
     backgroundColor: '#F34BC0',
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 24,
     borderRadius: 10,
     alignSelf: 'center',
+    height: 40
   },
   buttonText: { 
     color: '#F3ECE4',
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 17
+  },
+  swipeHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  swipeHintText: {
+    marginLeft: 6,
+    color: '#5C319A',
+    fontSize: 16,
+    fontStyle: 'italic',
   },
 });

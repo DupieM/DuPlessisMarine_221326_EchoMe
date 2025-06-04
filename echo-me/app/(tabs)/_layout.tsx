@@ -14,7 +14,7 @@ import JourneyInactive from '../../assets/images/Navbar/Journey_Inactive.png';
 import ChatActive from '../../assets/images/Navbar/Chat_Active.png';
 import ChatInactive from '../../assets/images/Navbar/Chat_Inactive.png';
 import HobbiesActive from '../../assets/images/Navbar/Hobbies_Active.png';
-import HobbiesInactive from '../../assets/images/Navbar/Home_Inactive.png';
+import HobbiesInactive from '../../assets/images/Navbar/Showcase_Inactive.png';
 import ShowcaseActive from '../../assets/images/Navbar/Showcase_Active.png';
 import ShowcaseInactive from '../../assets/images/Navbar/Showcase_Inactive.png';
 
