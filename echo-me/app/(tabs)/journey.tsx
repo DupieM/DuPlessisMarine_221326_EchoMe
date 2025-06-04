@@ -56,21 +56,21 @@ export default function JourneyScreen() {
       <Text style={styles.pageTitle}>My Journey</Text>
       <Text style={styles.descriptionText}>Explore the various learning elements during my studies</Text>
 
-      <View style={styles.tabContainer}>
-        {tabs.map(tab => (
-          <TouchableOpacity
-            key={tab}
-            onPress={() => {
-              setCurrentTab(tab);
-              setProgressIndex(0);
-            }}
-          >
-            <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>{tab}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
       <View style={styles.box}>
+        <View style={styles.tabContainer}>
+          {tabs.map(tab => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => {
+                setCurrentTab(tab);
+                setProgressIndex(0);
+              }}
+            >
+              <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>{tab}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
         <Progress.Bar
           progress={(progressIndex + 1) / prompts.length}
           width={320}
@@ -95,7 +95,7 @@ export default function JourneyScreen() {
             if (item === '__last_slide__') {
               return (
                 <View style={[styles.promptBox, { backgroundColor: '#DDECF6' }]}>
-                  <Text style={[styles.promptText, { fontSize: 24 }]}>You're all set!</Text>
+                  <Text style={[styles.promptText, { fontSize: 24 }]}>Done with my first Academic year!</Text>
                   <TouchableOpacity
                     style={[styles.chatButton, { marginTop: 20 }]}
                     onPress={() => router.push('/nextstep')}
@@ -109,6 +109,12 @@ export default function JourneyScreen() {
             return (
               <View style={[styles.promptBox]}>
                 <Text style={styles.promptText}>{item}</Text>
+                <View style={styles.swipeHint}>
+                  <Icon name="arrow-forward-circle-outline" size={28} color="#F34BC0" />
+                </View>
+                <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/chat')}>
+                  <Text style={styles.buttonText}>Go to Chat</Text>
+                </TouchableOpacity>
               </View>
             );
           }}
@@ -116,15 +122,6 @@ export default function JourneyScreen() {
           viewabilityConfig={viewabilityConfig}
           showsHorizontalScrollIndicator={false}
         />
-
-        <View style={styles.swipeHint}>
-          <Icon name="arrow-forward-circle-outline" size={28} color="#5C319A" />
-          <Text style={styles.swipeHintText}>Swipe</Text>
-        </View>
-
-        <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/chat')}>
-          <Text style={styles.buttonText}>Go to Chat</Text>
-        </TouchableOpacity>
 
       </View>
     </View>
@@ -203,7 +200,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 20,
     marginHorizontal: 10,
-    height: 300,
+    height: 360,
     justifyContent: 'center',
   },
   promptText: { 
@@ -227,7 +224,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5C319A',
   },
   chatButton: {
-    marginTop: 5,
+    marginTop: 28,
     backgroundColor: '#F34BC0',
     paddingVertical: 8,
     paddingHorizontal: 24,
@@ -245,7 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 20,
   },
   swipeHintText: {
     marginLeft: 6,

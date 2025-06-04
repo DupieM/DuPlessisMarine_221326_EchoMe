@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import { journeyPrompt } from './ChatPrompt';
 
 export function ChatCard() {
-  const [tab, setTab] = useState<'chat' | 'journey'>('chat');
+  const [tab, setTab] = useState<'chat' | 'journey'>('journey');
   const [input, setInput] = useState('');
   const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([]);
   const [journeyMessages, setJourneyMessages] = useState<{ role: string, content: string }[]>([]);

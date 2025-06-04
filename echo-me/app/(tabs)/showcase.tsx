@@ -44,24 +44,25 @@ export default function ShowcaseScreen() {
         Explore my unique style through the various projects I have done.
       </Text>
 
-      <View style={styles.tabContainer}>
-        {categories.map((tab) => (
-          <TouchableOpacity
-            key={tab}
-            onPress={() => {
-              setCurrentTab(tab);
-              setCurrentIndex(0);
-              flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
-            }}
-          >
-            <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>
-              {tab}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
       <View style={styles.box}>
+
+        <View style={styles.tabContainer}>
+          {categories.map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => {
+                setCurrentTab(tab);
+                setCurrentIndex(0);
+                flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
+              }}
+            >
+              <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
         <Progress.Bar
           progress={(currentIndex + 1) / projects.length}
           width={320}
@@ -70,9 +71,6 @@ export default function ShowcaseScreen() {
           borderRadius={8}
           style={{ marginBottom: 10 }}
         />
-        {/* <Text style={styles.percentText}>
-          {Math.round(((currentIndex + 1) / projects.length) * 100)}%
-        </Text> */}
 
         <FlatList
           ref={flatListRef}
@@ -92,14 +90,12 @@ export default function ShowcaseScreen() {
               <TouchableOpacity onPress={() => openLinkInApp(item.link)}>
                 <Text style={styles.platformLink}>{item.platform} ↗</Text>
               </TouchableOpacity>
+              <View style={styles.swipeHint}>
+                <Icon name="arrow-forward-circle-outline" size={28} color="#F34BC0" />
+              </View>
             </View>
           )}
         />
-
-        <View style={styles.swipeHint}>
-          <Icon name="arrow-forward-circle-outline" size={28} color="#5C319A" />
-          <Text style={styles.swipeHintText}>Swipe</Text>
-        </View>
       </View>
     </ScrollView>
   );
@@ -166,7 +162,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
     width: '100%',
-    height: 500
+    height: 540
   },
   projectImage: {
     width: 280,

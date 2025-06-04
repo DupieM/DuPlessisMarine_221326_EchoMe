@@ -7,7 +7,15 @@ export default function NextStepScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>What’s next?</Text>
-      <Text style={styles.subtitle}>Do you want to chat about my journey or ask for guidance</Text>
+
+      <Text style={styles.subtitle}>Do you want to continue with exploring my academic journey?</Text>
+      <TouchableOpacity style={styles.option} onPress={() => router.push('/journey')}>
+        <Text style={styles.optionText}>Journey</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.titletwo}>or</Text>
+
+      <Text style={styles.subtitle}>Do you want to chat about my journey or ask for guidance?</Text>
       <TouchableOpacity style={styles.option} onPress={() => router.push('/chat')}>
         <Text style={styles.optionText}>Chat</Text>
       </TouchableOpacity>
@@ -15,12 +23,12 @@ export default function NextStepScreen() {
       <Text style={styles.titletwo}>or</Text>
 
       <Text style={styles.subtitletwo}>
-        Do you want to explore my university projects or view my hobbies 
+        Do you want to explore my university projects or view my hobbies?
       </Text>
-      <TouchableOpacity style={styles.option} onPress={() => router.push('/showcase')}>
+      <TouchableOpacity style={styles.optiontwo} onPress={() => router.push('/showcase')}>
         <Text style={styles.optionText}>Projects</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.option} onPress={() => router.push('/hobbies')}>
+      <TouchableOpacity style={styles.optionthree} onPress={() => router.push('/hobbies')}>
         <Text style={styles.optionText}>Hobbies</Text>
       </TouchableOpacity>
     </View>
@@ -30,7 +38,7 @@ export default function NextStepScreen() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    padding: 20, 
+    padding: 13, 
     alignItems: 'center', 
     justifyContent: 'center', 
     backgroundColor: '#A6BCE6' 
@@ -48,17 +56,17 @@ const styles = StyleSheet.create({
     textAlign: 'center' 
   },
   titletwo: { 
-    fontSize: 30, 
-    marginBottom: 10,
+    fontSize: 25, 
+    marginBottom: 7,
     color: '#1E1924',
     fontStyle: 'italic',
-    marginTop: 20
+    marginTop: 7
   },
   subtitletwo: { 
     fontSize: 25, 
     color: '#1E1924', 
     marginBottom: 10, 
-    marginTop: 10,
+    marginTop: 0,
     textAlign: 'center' 
   },
   option: {
@@ -67,6 +75,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 10,
     marginTop: 15,
+  },
+  optiontwo: {
+    backgroundColor: '#F34BC0',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    marginTop: 15,
+    marginLeft: -160
+  },
+   optionthree: {
+    backgroundColor: '#F34BC0',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    marginTop: -50,
+    marginLeft: 150
   },
   optionText: { 
     color: '#F3ECE4', 
