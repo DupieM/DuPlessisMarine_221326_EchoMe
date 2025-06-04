@@ -1,31 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Keyboard } from 'react-native';
 import { journeyPrompt } from './ChatPrompt';
+import { MaterialIcons } from '@expo/vector-icons'; // Import for refresh icon
 
 export function ChatCard() {
   const [tab, setTab] = useState<'chat' | 'journey'>('journey');
   const [input, setInput] = useState('');
   const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([]);
   const [journeyMessages, setJourneyMessages] = useState<{ role: string, content: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false); // New state for loader
   const scrollViewRef = useRef<ScrollView>(null);
 
   const sendMessage = async () => {
-    if (!input) return;
+    if (!input.trim()) return; // Use .trim() to prevent sending empty messages
 
-    const userMessage = { role: 'user', content: input };
+    const userMessage = { role: 'user', content: input.trim() }; // Trim user input
 
     const currentMessages = tab === 'journey' ? journeyMessages : chatMessages;
     const setCurrentMessages = tab === 'journey' ? setJourneyMessages : setChatMessages;
 
-    const prompt =
-      tab === 'journey'
-        ? journeyPrompt(input) + '\nPlease limit your response to no more than 60 words.'
-        : input + '\nPlease limit your response to no more than 60 words.';
-
     // Optimistically add user message for immediate display
     setCurrentMessages(prevMessages => [...prevMessages, userMessage]); // Use functional update
+    setInput(''); // Clear input immediately after sending
+
+    setIsLoading(true); // Show loader
 
     try {
+      const prompt =
+        tab === 'journey'
+          ? journeyPrompt(userMessage.content) + '\nPlease limit your response to no more than 60 words.'
+          : userMessage.content + '\nPlease limit your response to no more than 60 words.';
+
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -61,19 +66,24 @@ export function ChatCard() {
     } catch (err) {
       console.error('Chat Error:', err);
       setCurrentMessages(prev => [...prev, { role: 'assistant', content: 'Something went wrong while contacting OpenAI.' }]);
+    } finally {
+      setIsLoading(false); // Hide loader regardless of success or failure
     }
-
-    setInput('');
   };
 
   const messages = tab === 'journey' ? journeyMessages : chatMessages;
 
-  // This useEffect is sufficient for auto-scrolling to the end when new messages arrive.
   useEffect(() => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
-  }, [messages]);
+  }, [messages, isLoading]); // Also scroll when loading state changes to show loader
+
+  const handleRefreshChat = () => {
+    setChatMessages([]); // Clear chat messages
+    setInput(''); // Clear input
+    setIsLoading(false); // Ensure loader is hidden
+  };
 
   return (
     <View style={styles.mainbox}>
@@ -84,13 +94,19 @@ export function ChatCard() {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setTab('chat')} style={[styles.tab, tab === 'chat' && styles.activeTab]}>
             <Text style={styles.tabText}>Ask Me Anything</Text>
+            {tab === 'chat' && (
+              <TouchableOpacity onPress={handleRefreshChat} style={styles.refreshIcon}>
+                <MaterialIcons name="refresh" size={20} color="white" />
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
         </View>
 
         <ScrollView
           ref={scrollViewRef}
           style={styles.chatBox}
-          contentContainerStyle={{ paddingBottom: 0 }} // Prevent overlap with input
+          contentContainerStyle={{ paddingBottom: 0 }}
+          scrollEnabled={true}
           keyboardShouldPersistTaps="handled"
         >
           {messages.map((msg, idx) => (
@@ -98,6 +114,11 @@ export function ChatCard() {
               <Text style={styles.msgText}>{msg.content}</Text>
             </View>
           ))}
+          {isLoading && (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="small" color="#4c2a85" />
+            </View>
+          )}
         </ScrollView>
 
         <View style={styles.inputRow}>
@@ -106,8 +127,10 @@ export function ChatCard() {
             onChangeText={setInput}
             style={styles.input}
             placeholder="Message"
+            onSubmitEditing={sendMessage} // Trigger sendMessage on keyboard "Done" or "Send"
+            blurOnSubmit={false} // Keep keyboard open if needed, or true to dismiss
           />
-          <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+          <TouchableOpacity onPress={sendMessage} style={styles.sendButton} disabled={isLoading}>
             <Text style={{ color: 'white' }}>➤</Text>
           </TouchableOpacity>
         </View>
@@ -129,6 +152,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 340,
     marginLeft: -20,
+    marginBottom: 9.9
   },
   tabs: {
     flexDirection: 'row',
@@ -136,6 +160,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   tab: {
+    flexDirection: 'row', // To align text and icon
+    alignItems: 'center', // To vertically center them
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginHorizontal: 5,
@@ -149,9 +175,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold'
   },
+  refreshIcon: {
+    marginLeft: 8, // Space between text and icon
+  },
   chatBox: {
-    height: 300
-    // overflowY: 'auto' is for web, not typically needed for React Native ScrollView
+    height: 290,
   },
   scrollContent: {
     paddingVertical: 10
@@ -191,5 +219,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 50,
     alignItems: 'center'
+  },
+  loaderContainer: {
+    alignSelf: 'center',
+    marginVertical: 10,
   }
 });

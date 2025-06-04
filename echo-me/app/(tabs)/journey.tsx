@@ -12,7 +12,7 @@ const tabs: JourneyYear[] = ['1st year', '2nd year', '3rd year', 'Post-Graduete'
 const screenWidth = Dimensions.get('window').width;
 
 export default function JourneyScreen() {
-  const [currentTab, setCurrentTab] = useState<JourneyYear>('1st year');
+  const [currentTab, setCurrentTab] = useState<JourneyYear>('3rd year');
   const [progressIndex, setProgressIndex] = useState(0);
   const router = useRouter();
 
@@ -54,7 +54,9 @@ export default function JourneyScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.pageTitle}>My Journey</Text>
-      <Text style={styles.descriptionText}>Explore the various learning elements during my studies</Text>
+      <Text style={styles.descriptionText}>
+        Let me guide you through the learning milestones that shaped my path through my studies.
+        </Text>
 
       <View style={styles.box}>
         <View style={styles.tabContainer}>
@@ -95,7 +97,6 @@ export default function JourneyScreen() {
             if (item === '__last_slide__') {
               return (
                 <View style={[styles.promptBox, { backgroundColor: '#DDECF6' }]}>
-                  <Text style={[styles.promptText, { fontSize: 24 }]}>Done with my first Academic year!</Text>
                   <TouchableOpacity
                     style={[styles.chatButton, { marginTop: 20 }]}
                     onPress={() => router.push('/nextstep')}
@@ -109,9 +110,6 @@ export default function JourneyScreen() {
             return (
               <View style={[styles.promptBox]}>
                 <Text style={styles.promptText}>{item}</Text>
-                <View style={styles.swipeHint}>
-                  <Icon name="arrow-forward-circle-outline" size={28} color="#F34BC0" />
-                </View>
                 <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/chat')}>
                   <Text style={styles.buttonText}>Go to Chat</Text>
                 </TouchableOpacity>
@@ -122,6 +120,18 @@ export default function JourneyScreen() {
           viewabilityConfig={viewabilityConfig}
           showsHorizontalScrollIndicator={false}
         />
+
+        <View style={styles.paginationContainer}>
+          {prompts.slice(0, -1).map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.paginationDot,
+                index === progressIndex && styles.activeDot,
+              ]}
+            />
+          ))}
+        </View>
 
       </View>
     </View>
@@ -200,11 +210,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 20,
     marginHorizontal: 10,
-    height: 360,
+    height: 330,
     justifyContent: 'center',
   },
   promptText: { 
-    fontSize: 28, 
+    fontSize: 25, 
     textAlign: 'center', 
     color: '#3B3356' 
   },

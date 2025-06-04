@@ -41,7 +41,7 @@ export default function ShowcaseScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.pageTitle}>Showcase</Text>
       <Text style={styles.descriptionText}>
-        Explore my unique style through the various projects I have done.
+        Take a look at the projects that shaped my style, maybe it’ll spark ideas for your own path.
       </Text>
 
       <View style={styles.box}>

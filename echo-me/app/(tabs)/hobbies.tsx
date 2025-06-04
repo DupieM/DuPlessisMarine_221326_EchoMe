@@ -1,15 +1,5 @@
 import React, { useState, useRef } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import axios from 'axios';
 import { HobbyDropdown } from '@/components/screen_hobbies/HobbyDropdown';
 import { HobbyCard } from '@/components/screen_hobbies/HobbyCard';
@@ -22,12 +12,15 @@ type Message = {
   text: string;
 };
 
+// Get screen height to calculate appropriate chat container height
+const { height: screenHeight } = Dimensions.get('window');
+
 export default function HobbiesScreen() {
   const [selectedHobby, setSelectedHobby] = useState(ShowcaseData.Hobby[0]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const chatScrollViewRef = useRef<ScrollView>(null); // Renamed ref for clarity
 
   const API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
 
@@ -72,21 +65,21 @@ export default function HobbiesScreen() {
     } finally {
       setLoading(false);
       setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
+        chatScrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
     }
   };
 
   return (
-    <ScrollView>
+    // Reintroduce the outer ScrollView
+    <ScrollView style={styles.mainScrollView} nestedScrollEnabled={true}>
       <ThemedView style={styles.titleContainer}>
         <View style={styles.headerContent}>
           <Text style={styles.pageTitle}>My Hobbies</Text>
           <Text style={styles.descriptionText}>
-            View a list of my hobbies that I like to do in my free time
+            Curious how I unwind and stay motivated? Here are a few of my favorite hobbies that keep me going.
           </Text>
         </View>
-
         <View style={styles.container}>
           <HobbyDropdown
             options={ShowcaseData.Hobby}
@@ -100,18 +93,19 @@ export default function HobbiesScreen() {
           />
 
           <View style={styles.chatContainer}>
-            <Text style={styles.chatTitle}>Ask me about this hobby:</Text>
+            <Text style={styles.chatTitle}>Ask me about my hobbies:</Text>
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               keyboardVerticalOffset={90}
               style={{ flex: 1 }}
             >
               <ScrollView
-                ref={scrollViewRef}
-                style={styles.chatContainertwo}
-                contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
-                onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+                ref={chatScrollViewRef} // Use the specific ref for chat
+                style={styles.chatScrollView}
+                contentContainerStyle={styles.chatContentContainer}
+                onContentSizeChange={() => chatScrollViewRef.current?.scrollToEnd({ animated: true })}
                 keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled={true} // IMPORTANT: Allow nested scrolling for the chat
               >
                 {messages.map((msg, index) => (
                   <View
@@ -137,21 +131,25 @@ export default function HobbiesScreen() {
                   returnKeyType="send"
                 />
                 <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-                  <Text style={styles.sendButtonText}>Send</Text>
+                  <Text style={{ color: 'white' }}>➤</Text>
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
           </View>
         </View>
-
       </ThemedView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-   titleContainer: {
+  mainScrollView: {
+    flex: 1, 
+  },
+  titleContainer: {
     alignItems: 'center',
+    paddingTop: Platform.OS === 'android' ? 25 : 0, 
+    paddingBottom: 20, 
   },
   headerContent: {
     width: 300,
@@ -172,19 +170,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   container: {
-    flex: 1,
-    padding: 16,
+    marginTop: 30,
+    paddingHorizontal: 16, 
+    width: '100%', 
   },
   chatContainer: {
     marginTop: 4,
-    backgroundColor: '#F3ECE4',
+    backgroundColor: '#f2ede8',
     borderRadius: 10,
     padding: 10,
-    maxHeight: 400,
-    flexGrow: 1,
+    height: screenHeight * 0.5, 
+    justifyContent: 'space-between', 
   },
-  chatContainertwo: {
-    maxHeight: 300,
+  chatScrollView: {
+    flex: 1, 
+    marginBottom: 10,
+  },
+  chatContentContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
   },
   chatTitle: {
     fontSize: 20,
@@ -199,34 +203,34 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     alignSelf: 'flex-end',
-    backgroundColor: '#DCF8C6',
+    backgroundColor: '#4c2a85',
   },
   botBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#2A144A',
   },
   messageText: {
     fontSize: 16,
+    color: 'white'
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
-    bottom: 0,
-    width: 300,
+    width: '100%', // Ensure it takes full width
   },
   input: {
     flex: 1,
     fontSize: 16,
     padding: 10,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
     borderRadius: 20,
   },
   sendButton: {
     marginLeft: 8,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#e157c4',
     borderRadius: 20,
   },
   sendButtonText: {
