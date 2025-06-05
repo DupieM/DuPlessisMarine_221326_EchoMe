@@ -40,7 +40,6 @@
    * [Ideation](#ideation)
    * [Wireframes](#wireframes)
    * [User-flow](#user-flow)
-   * [ERD](#erd-diagram)
 * [Development Process](#development-process)
    * [Implementation Process](#implementation-process)
         * [Highlights](#highlights)
@@ -66,7 +65,7 @@
 
 ### Project Description
 
-EchoMe is an interactive digital platform that leverages an AI-powered companion - personalized around the creator’s character - to support individuals throughout their academic journeys. Designed specifically for students, EchoMe delivers personalized insights, technical guidance, and career advice tailored to users’ unique goals and challenges. The platform focuses on key areas of UX Design and Development, offering actionable recommendations across academic hurdles, design principles, and technical workflows.
+EchoMe is an interactive digital platform that leverages an AI-powered companion - personalized around the creator’s character - to support individuals throughout their academic journeys. Designed specifically for students, EchoMe delivers a personalized view into the creator’s journey with insights. It can also provide technical guidance and career advice tailored to users’ unique goals and challenges via the AI companion Chat. The platform focuses on key areas of UX Design and Interactive Development, offering insight into design principles and technical workflows.
 
 ### Built With
 
@@ -135,11 +134,11 @@ To start the Expo app on a phone:
 
 ### Intro & Home Screens
 
-This screen welcomes users to EchoMe, where they are introduced to Lila Botha, the AI version of myself. It includes a message box explaining what users can do within the app.
+This screen welcomes users to EchoMe, where they are introduced to Lila Botha, the AI version of myself. It includes a text box explaining what users can do within the app.
 
 </br>
 
-<img src="readme-images/My_Journey.png" alt="journey" width="520px">
+<img src="readme-images/My_Journey.png" alt="journey" width="350px">
 
 ### My Journey Screen
 
@@ -147,7 +146,7 @@ Here, users can explore my academic journey at Open Window. They can view my lea
 
 </br>
 
-<img src="readme-images/Next_Step.png" alt="next step" width="520px">
+<img src="readme-images/Next_Step.png" alt="next step" width="350px">
 
 ### Next Step Screen
 
@@ -159,7 +158,7 @@ This screen helps users decide what they’d like to do next as they navigate th
 
 ### Chat Screen
 
-Users can chat with me about the details of my academic journey—asking questions about each year's learnings. They can also interact with a general AI assistant to receive career advice or ask anything they're curious to learn.
+Users can chat with me about the details of my academic journey, asking questions about each year's learnings. They can also interact with a general AI assistant to receive career advice or ask anything they're curious to learn.
 
 </br>
 
@@ -167,7 +166,7 @@ Users can chat with me about the details of my academic journey—asking questio
 
 ### Hobbies Screen
 
-This screen showcases my personal hobbies. Users can also engage in a conversation with me to learn more about these interests.
+This screen showcases my personal hobbies. Users can engage in a conversation with me to learn more about these interests.
 
 </br>
 
@@ -175,13 +174,13 @@ This screen showcases my personal hobbies. Users can also engage in a conversati
 
 ### Showcase Screen
 
-Users can browse the projects I completed during my studies. These are divided into two categories: UX Design and Interactive Development. Each project includes a brief description and a link to my portfolio for more details
+Users can browse the projects I completed during my studies. These are divided into two categories: UX Design and Interactive Development. Each project includes a brief description and a link to my portfolio for more details on my designs and the processes I followed.
 
 <!-- CONCEPT PROCESS -->
 <!-- Briefly explain your concept ideation process -->
 ## Concept Process
 
-The `Conceptual Process` is the set of actions, activities and research that was done when starting this project.
+The `Conceptual Process` is the set of actions, activities and research that was done during this project.
 
 ### Ideation
 
@@ -210,18 +209,18 @@ The `Development Process` is the technical implementations and functionality don
 <!-- stipulate all of the functionality you included in the project -->
 
 * `Expo` was used to create a native Android app
-* `OpenAI` was used to get insights on their carbon footprint data
+* `OpenAI` was used to get responses from AI based on questions asked
 * `Webview` was used to open my repository links in the app
 
 #### Highlights
 <!-- stipulated the highlight you experienced with the project -->
-* Adding my special prompts to make sure that the AI will respond based on my interest
-* Making it possible for the user to take a journey prompt and let it form automatic into a question on the Chat screen
+* Engineering my prompts to make sure that the AI will respond based on my academic journey and creative identity
+* Making it possible for the user to select the chat function and then based on the journey milestone where they are currently at form an automatic question on the Chat screen
 
 #### Challenges
 <!-- stipulated the challenges you faced with the project and why you think you faced it or how you think you'll solve it (if not solved) -->
-* Interfacing with OpenAi to have two differnet type sof calls that teh user can use
-* Interfacing with teh chat screen to display the journey card text in a question format for the user when clicking on a button
+* Interfacing with OpenAI in two different ways as I have two types of  questions towards AI
+* Interfacing with the chat screen to display the journey card text in a question format for the user when clicking on a button
 
 ### Reviews & Testing
 <!-- stipulate how you've conducted testing in the form of peer reviews, feedback and also functionality testing, like unit tests (if applicable) -->
@@ -230,12 +229,12 @@ The `Development Process` is the technical implementations and functionality don
 
 `Unit Tests` were conducted to establish working functionality. Here are all the tests that were ran:
 
-* `Test 1` of confirming that displaying of journey data on my cards to view
-* `Test 2` of confirming that the chat function works for when user type a question on the journey tab to answer accoridng to who I am
-* `Test 3` of confirming thta the chat function works for when user is on Ask anything tab that lets them chat with normal AI
-* `Test 4` of confirming that the hobbies displkay in dropdown box and populate card below
-* `Test 5` of confirming that the chat function below the hobbies card work to chat about my hobby
-* `Test 6` of confirming that the link to my online portfolios and display on the web screen view
+* `Test 1` of confirming that displaying of journey data on my cards are correct
+* `Test 2` of confirming that the chat function works for when user type a question on the journey tab to answer according to who I am
+* `Test 3` of confirming that the chat function works for when user is on Ask anything tab that lets them chat with a normal AI request
+* `Test 4` of confirming that the hobbies display in dropdown box and populate card below
+* `Test 5` of confirming that the chat function below the hobbies card work to chat about my hobbies
+* `Test 6` of confirming that the link to my online portfolios and display on the web screen view are working
 
 #### UAT Tests
 
@@ -244,10 +243,11 @@ The `Development Process` is the technical implementations and functionality don
 * `Peer One` did a unit test of the whole app and helped me by pointing out how to fix my UI designs to make it more user friendly
 * `Peer Two` did a unit test to test if all the functionality was working perfectly.
 * `Peer three` did a unit test to test if all the functionality was working perfectly.
+
 ### Future Implementation
 <!-- stipulate functionality and improvements that can be implemented in the future. -->
 
-* To impliment Firebase storage for my hobbies that is displayed
+* To implement Firebase storage for my hobbies that is displayed as to easily update content
 * Linking my projects that is talked about in my journey to my showcase screen for that specific project
 
 <!-- MOCKUPS -->
@@ -316,4 +316,6 @@ The Thinking CAbinet Rights reserved © 2025
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 <!-- all resources that you used and Acknowledgements here -->
-* [??]()
+* [OpenAi Documentation](https://platform.openai.com/docs/concepts)
+* [Expo Documentation](https://docs.expo.dev/)
+* [React Native Documentation](https://reactnative.dev/docs/getting-started)
