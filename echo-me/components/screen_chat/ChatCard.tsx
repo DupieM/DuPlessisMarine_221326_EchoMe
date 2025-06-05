@@ -1,35 +1,100 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Keyboard } from 'react-native';
-import { journeyPrompt } from './ChatPrompt';
-import { MaterialIcons } from '@expo/vector-icons'; // Import for refresh icon
+// Assuming journeyPrompt is defined in ChatPrompt.ts/js
+import { journeyPrompt } from '@/components/screen_chat/ChatPrompt'; // Corrected import path based on your earlier code
+import { MaterialIcons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
 
 export function ChatCard() {
   const [tab, setTab] = useState<'chat' | 'journey'>('journey');
   const [input, setInput] = useState('');
   const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([]);
   const [journeyMessages, setJourneyMessages] = useState<{ role: string, content: string }[]>([]);
-  const [isLoading, setIsLoading] = useState(false); // New state for loader
+  const [isLoading, setIsLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  const { initialPrompt } = useLocalSearchParams<{ initialPrompt?: string }>();
 
-  const sendMessage = async () => {
-    if (!input.trim()) return; // Use .trim() to prevent sending empty messages
+  // Use a ref to track if the initial prompt has been processed to avoid re-processing
+  const initialPromptHandled = useRef(false);
 
-    const userMessage = { role: 'user', content: input.trim() }; // Trim user input
+  // Effect to handle the initial prompt coming from JourneyScreen
+  useEffect(() => {
+    if (initialPrompt && !initialPromptHandled.current) {
+      setTab('journey'); // Switch to the journey tab
+      // Instead of setting the input directly, let's use the AI to generate a question
+      // This will be treated as an AI-generated user question
+      generateUserQuestionFromPrompt(initialPrompt);
+      initialPromptHandled.current = true; // Mark as handled
+    }
+  }, [initialPrompt]);
+
+  // Function to generate a user-like question from the journey prompt
+  const generateUserQuestionFromPrompt = async (promptText: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [
+            {
+              role: 'system',
+              content: `Rephrase the following statement into a natural, common question a university student might ask. 
+                        For example, if the statement is "Understanding essay structures," a good question would be 
+                        "How can I understand essay structures better?" Or if it's "Balancing academics and social life",
+                        it could be "How do I balance my studies with my social life?". 
+                        Keep it concise and conversational. Do not answer the question, just rephrase it as a question.`
+            },
+            { role: 'user', content: promptText }
+          ],
+          temperature: 0.5, // Lower temperature for more consistent rephrasing
+          max_tokens: 50 // Limit the length of the generated question
+        }),
+      });
+
+      const data = await response.json();
+      const generatedQuestion = data.choices?.[0]?.message?.content?.trim() || promptText; // Fallback to original if generation fails
+
+      // Add the AI-generated question to journey messages as if the user asked it
+      setJourneyMessages(prev => [...prev, { role: 'user', content: generatedQuestion }]);
+      // Immediately send this generated question for an AI answer
+      sendMessage(generatedQuestion, true); // Pass true to indicate it's an initial AI-triggered message
+    } catch (error) {
+      console.error("Error generating user question:", error);
+      // Fallback: Add the original prompt directly if question generation fails
+      setJourneyMessages(prev => [...prev, { role: 'user', content: promptText }]);
+      sendMessage(promptText, true); // Send the original prompt to AI
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendMessage = async (messageContent?: string, isInitialAITriggered: boolean = false) => {
+    const textToSend = messageContent || input.trim();
+    if (!textToSend) return;
+
+    const userMessage = { role: 'user', content: textToSend };
 
     const currentMessages = tab === 'journey' ? journeyMessages : chatMessages;
     const setCurrentMessages = tab === 'journey' ? setJourneyMessages : setChatMessages;
 
-    // Optimistically add user message for immediate display
-    setCurrentMessages(prevMessages => [...prevMessages, userMessage]); // Use functional update
-    setInput(''); // Clear input immediately after sending
-
+    // Only add user message to history if it's not an AI-triggered initial message
+    if (!isInitialAITriggered) {
+      setCurrentMessages(prevMessages => [...prevMessages, userMessage]);
+      setInput(''); // Clear input immediately after sending for manual input
+    }
+    
     setIsLoading(true); // Show loader
 
     try {
-      const prompt =
+      const promptToAI =
         tab === 'journey'
-          ? journeyPrompt(userMessage.content) + '\nPlease limit your response to no more than 60 words.'
-          : userMessage.content + '\nPlease limit your response to no more than 60 words.';
+          ? journeyPrompt(textToSend) + '\nPlease limit your response to no more than 60 words.'
+          : textToSend + '\nPlease limit your response to no more than 60 words.';
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -48,7 +113,7 @@ export function ChatCard() {
                   : 'You are a helpful and knowledgeable AI assistant.'
             },
             ...currentMessages, // Send previous messages for context
-            { role: 'user', content: prompt }
+            { role: 'user', content: promptToAI } // Send the specific prompt for AI to respond to
           ],
           temperature: 0.7
         })
@@ -77,12 +142,19 @@ export function ChatCard() {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
-  }, [messages, isLoading]); // Also scroll when loading state changes to show loader
+  }, [messages, isLoading]);
 
   const handleRefreshChat = () => {
-    setChatMessages([]); // Clear chat messages
-    setInput(''); // Clear input
-    setIsLoading(false); // Ensure loader is hidden
+    setChatMessages([]);
+    setInput('');
+    setIsLoading(false);
+  };
+
+  const handleRefreshJourney = () => {
+    setJourneyMessages([]);
+    setInput('');
+    setIsLoading(false);
+    initialPromptHandled.current = false; // Reset for potential new journey prompts
   };
 
   return (
@@ -91,6 +163,11 @@ export function ChatCard() {
         <View style={styles.tabs}>
           <TouchableOpacity onPress={() => setTab('journey')} style={[styles.tab, tab === 'journey' && styles.activeTab]}>
             <Text style={styles.tabText}>My Journey</Text>
+            {tab === 'journey' && (
+              <TouchableOpacity onPress={handleRefreshJourney} style={styles.refreshIcon}>
+                <MaterialIcons name="refresh" size={20} color="white" />
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setTab('chat')} style={[styles.tab, tab === 'chat' && styles.activeTab]}>
             <Text style={styles.tabText}>Ask Me Anything</Text>
@@ -127,10 +204,10 @@ export function ChatCard() {
             onChangeText={setInput}
             style={styles.input}
             placeholder="Message"
-            onSubmitEditing={sendMessage} // Trigger sendMessage on keyboard "Done" or "Send"
-            blurOnSubmit={false} // Keep keyboard open if needed, or true to dismiss
+            onSubmitEditing={() => sendMessage()} // Call with no arguments for manual input
+            blurOnSubmit={false}
           />
-          <TouchableOpacity onPress={sendMessage} style={styles.sendButton} disabled={isLoading}>
+          <TouchableOpacity onPress={() => sendMessage()} style={styles.sendButton} disabled={isLoading}>
             <Text style={{ color: 'white' }}>➤</Text>
           </TouchableOpacity>
         </View>
@@ -160,8 +237,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   tab: {
-    flexDirection: 'row', // To align text and icon
-    alignItems: 'center', // To vertically center them
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginHorizontal: 5,
@@ -176,7 +253,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   refreshIcon: {
-    marginLeft: 8, // Space between text and icon
+    marginLeft: 8,
   },
   chatBox: {
     height: 290,

@@ -6,15 +6,17 @@ import { useRouter } from 'expo-router';
 import { journeyData } from '@/components/screen_chat/ChatPrompt';
 // @ts-ignore
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
 type JourneyYear = '1st year' | '2nd year' | '3rd year' | 'Post-Graduete';
 const tabs: JourneyYear[] = ['1st year', '2nd year', '3rd year', 'Post-Graduete'];
 const screenWidth = Dimensions.get('window').width;
 
 export default function JourneyScreen() {
-  const [currentTab, setCurrentTab] = useState<JourneyYear>('3rd year');
+  const [currentTab, setCurrentTab] = useState<JourneyYear>('1st year');
   const [progressIndex, setProgressIndex] = useState(0);
   const router = useRouter();
+  const navigation = useNavigation();
 
   const prompts = [...journeyData[currentTab], '__last_slide__'];
 
@@ -49,6 +51,13 @@ export default function JourneyScreen() {
       setCurrentTab(tab);
       setProgressIndex(index);
     }
+  };
+
+  const handleGoToChat = (prompt: string) => {
+    router.push({
+      pathname: '/chat',
+      params: { initialPrompt: prompt },
+    });
   };
 
   return (
@@ -110,7 +119,10 @@ export default function JourneyScreen() {
             return (
               <View style={[styles.promptBox]}>
                 <Text style={styles.promptText}>{item}</Text>
-                <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/chat')}>
+                <TouchableOpacity
+                  style={styles.chatButton}
+                  onPress={() => handleGoToChat(item)}
+                >
                   <Text style={styles.buttonText}>Go to Chat</Text>
                 </TouchableOpacity>
               </View>
@@ -163,7 +175,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'space-around', 
     width: '100%', 
-    marginBottom: 20 
+    marginBottom: 9 
   },
   tabText: { 
     fontSize: 15,
@@ -203,14 +215,14 @@ const styles = StyleSheet.create({
     marginVertical: 10 
   },
   promptBox: {
-    marginTop: 15,
+    marginTop: 5,
     width: 300,
     borderColor: '#9D9D9D',
     borderWidth: 2,
     borderRadius: 12,
-    padding: 20,
+    padding: 15,
     marginHorizontal: 10,
-    height: 330,
+    height: 350,
     justifyContent: 'center',
   },
   promptText: { 
@@ -234,7 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5C319A',
   },
   chatButton: {
-    marginTop: 28,
+    marginTop: 20,
     backgroundColor: '#F34BC0',
     paddingVertical: 8,
     paddingHorizontal: 24,

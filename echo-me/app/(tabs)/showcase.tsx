@@ -90,12 +90,22 @@ export default function ShowcaseScreen() {
               <TouchableOpacity onPress={() => openLinkInApp(item.link)}>
                 <Text style={styles.platformLink}>{item.platform} ↗</Text>
               </TouchableOpacity>
-              <View style={styles.swipeHint}>
-                <Icon name="arrow-forward-circle-outline" size={28} color="#F34BC0" />
-              </View>
             </View>
           )}
         />
+        
+        <View style={styles.paginationContainer}>
+          {projects.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.paginationDot,
+                currentIndex === index && styles.activeDot,
+              ]}
+            />
+          ))}
+        </View>
+
       </View>
     </ScrollView>
   );
@@ -200,5 +210,26 @@ const styles = StyleSheet.create({
     color: '#5C319A',
     fontSize: 16,
     fontStyle: 'italic',
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#C4C4C4',
+    marginHorizontal: 5,
+  },
+
+  activeDot: {
+    backgroundColor: '#5C319A',
+    width: 12,
+    height: 12,
   },
 });
