@@ -131,7 +131,7 @@ To start the Expo app on a phone:
 <!-- You can add the links to all of your imagery at the bottom of the file as references -->
 ## Features and Functionality
 
-<img src="readme-images/Intro_Home.png" alt="Home" width="560px">
+<img src="readme-images/Intro_Home.png" alt="Home" width="590px">
 
 ### Intro & Home Screens
 
@@ -139,7 +139,7 @@ This screen welcomes users to EchoMe, where they are introduced to Lila Botha, t
 
 </br>
 
-<img src="readme-images/My_Journey.png" alt="journey" width="560px">
+<img src="readme-images/My_Journey.png" alt="journey" width="520px">
 
 ### My Journey Screen
 
@@ -147,7 +147,7 @@ Here, users can explore my academic journey at Open Window. They can view my lea
 
 </br>
 
-<img src="readme-images/Next_Step.png" alt="next step" width="560px">
+<img src="readme-images/Next_Step.png" alt="next step" width="520px">
 
 ### Next Step Screen
 
@@ -155,7 +155,7 @@ This screen helps users decide what they’d like to do next as they navigate th
 
 </br>
 
-<img src="readme-images/Chat.png" alt="Chat" width="560px">
+<img src="readme-images/Chat.png" alt="Chat" width="590px">
 
 ### Chat Screen
 
@@ -171,7 +171,7 @@ This screen showcases my personal hobbies. Users can also engage in a conversati
 
 </br>
 
-<img src="readme-images/Showcase.png" alt="Showcase" width="600px">
+<img src="readme-images/Showcase.png" alt="Showcase" width="730px">
 
 ### Showcase Screen
 
