@@ -13,7 +13,7 @@
 <p align="center">
 
   <a href="https://github.com/DupieM/DuPlessisMarine_221326_EchoMe">
-    <img src="readme-images/Logo.png" alt="Logo" width="240" height="130" >
+    <img src="readme-images/Logo.png" alt="Logo" width="140" height="140">
   </a>
   
   <h3 align="center">EchoMe</h3>
@@ -62,7 +62,7 @@
 <!--PROJECT DESCRIPTION-->
 ## About the Project
 <!-- header image of project -->
-<img src="" alt="header image" width="580px">
+<img src="readme-images/header image.png" alt="header image" width="580px">
 
 ### Project Description
 
@@ -131,14 +131,15 @@ To start the Expo app on a phone:
 <!-- You can add the links to all of your imagery at the bottom of the file as references -->
 ## Features and Functionality
 
-![??]()
-### Home Screens
+![Home](readme-images/Intro_Home.png)
+
+### Intro & Home Screens
 
 This screen welcomes users to EchoMe, where they are introduced to Lila Botha, the AI version of myself. It includes a message box explaining what users can do within the app.
 
 </br>
 
-![??]()
+![ My Journey](readme-images/My_Journey.png)
 
 ### My Journey Screen
 
@@ -146,7 +147,7 @@ Here, users can explore my academic journey at Open Window. They can view my lea
 
 </br>
 
-![??]()
+![Next Step](readme-images/Next_Step.png)
 
 ### Next Step Screen
 
@@ -154,7 +155,7 @@ This screen helps users decide what they’d like to do next as they navigate th
 
 </br>
 
-![??]()
+![Chat](readme-images/Chat.png)
 
 ### Chat Screen
 
@@ -162,7 +163,7 @@ Users can chat with me about the details of my academic journey—asking questio
 
 </br>
 
-![??]()
+![Hobbies](readme-images/Hobbies.png)
 
 ### Hobbies Screen
 
@@ -170,7 +171,7 @@ This screen showcases my personal hobbies. Users can also engage in a conversati
 
 </br>
 
-![??]()
+![Showcase](readme-images/Showcase.png)
 
 ### Showcase Screen
 
@@ -214,11 +215,13 @@ The `Development Process` is the technical implementations and functionality don
 
 #### Highlights
 <!-- stipulated the highlight you experienced with the project -->
-* ??
+* Adding my special prompts to make sure that the AI will respond based on my interest
+* Making it possible for the user to take a journey prompt and let it form automatic into a question on the Chat screen
 
 #### Challenges
 <!-- stipulated the challenges you faced with the project and why you think you faced it or how you think you'll solve it (if not solved) -->
-* ??
+* Interfacing with OpenAi to have two differnet type sof calls that teh user can use
+* Interfacing with teh chat screen to display the journey card text in a question format for the user when clicking on a button
 
 ### Reviews & Testing
 <!-- stipulate how you've conducted testing in the form of peer reviews, feedback and also functionality testing, like unit tests (if applicable) -->
@@ -227,32 +230,44 @@ The `Development Process` is the technical implementations and functionality don
 
 `Unit Tests` were conducted to establish working functionality. Here are all the tests that were ran:
 
-* `Test ?` of
-* `Test ?` of
-* `Test ?` of
-* `Test ?` of
-* `Test ?` of
-* `Test ?` of
+* `Test 1` of confirming that displaying of journey data on my cards to view
+* `Test 2` of confirming that the chat function works for when user type a question on the journey tab to answer accoridng to who I am
+* `Test 3` of confirming thta the chat function works for when user is on Ask anything tab that lets them chat with normal AI
+* `Test 4` of confirming that the hobbies displkay in dropdown box and populate card below
+* `Test 5` of confirming that the chat function below the hobbies card work to chat about my hobby
+* `Test 6` of confirming that the link to my online portfolios and display on the web screen view
 
 #### UAT Tests
 
 `User Acceptance Testing` were conducted to establish working functionality by my peers.
 
-* `Peer One` did a unit test 
-* `Peer Two` did a unit test 
-* `Peer three` did a unit test 
-
+* `Peer One` did a unit test of the whole app and helped me by pointing out how to fix my UI designs to make it more user friendly
+* `Peer Two` did a unit test to test if all the functionality was working perfectly.
+* `Peer three` did a unit test to test if all the functionality was working perfectly.
 ### Future Implementation
 <!-- stipulate functionality and improvements that can be implemented in the future. -->
 
 * To impliment Firebase storage for my hobbies that is displayed
+* Linking my projects that is talked about in my journey to my showcase screen for that specific project
 
 <!-- MOCKUPS -->
 ## Final Outcome
 
 ### Mockups
 
-![Mockup ?]()
+![Mockup 1](readme-images/Mockup_1.png)
+<br>
+
+![Mockup 2](readme-images/Mockup_2.png)
+<br>
+
+![Mockup 3](readme-images/Mockup_3.png)
+<br>
+
+![Mockup 4](readme-images/Mockup_4.png)
+<br>
+
+![Mockup 5](readme-images/Mockup_5.png)
 <br>
 
 <!-- VIDEO DEMONSTRATION -->
