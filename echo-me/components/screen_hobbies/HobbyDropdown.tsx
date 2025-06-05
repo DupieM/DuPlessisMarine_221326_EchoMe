@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // install with: expo install @react-native-picker/picker
+import { Picker } from '@react-native-picker/picker';
 
+// Defines the props for the HobbyDropdown component.
 interface HobbyDropdownProps {
   options: { name: string }[];
   onSelect: (item: any) => void;
@@ -9,6 +10,7 @@ interface HobbyDropdownProps {
 }
 
 export function HobbyDropdown({ options, onSelect, selected }: HobbyDropdownProps) {
+  // Renders a dropdown picker for selecting hobbies from a list of options.
   return (
     <View style={styles.dropdownContainer}>
       <Picker
@@ -27,6 +29,7 @@ export function HobbyDropdown({ options, onSelect, selected }: HobbyDropdownProp
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   dropdownContainer: {
     backgroundColor: '#FF69B4',

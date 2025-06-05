@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 export default function IntroScreen() {
   const router = useRouter();
 
+  // Renders the introductory screen with an app logo, title, subtitle, and a continue button.
   return (
     <View style={styles.container}>
       <Image source={require('../assets/images/Logo.png')} style={styles.image} />
@@ -17,6 +18,7 @@ export default function IntroScreen() {
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   container: {
     flex: 1,

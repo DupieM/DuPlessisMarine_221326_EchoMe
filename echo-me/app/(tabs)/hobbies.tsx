@@ -7,12 +7,12 @@ import { ShowcaseData } from '@/components/screen_hobbies/HobbyPrompt';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedView } from '@/components/ThemedView';
 
+// Defines the message type and gets the screen height.
 type Message = {
   sender: 'user' | 'bot';
   text: string;
 };
 
-// Get screen height to calculate appropriate chat container height
 const { height: screenHeight } = Dimensions.get('window');
 
 export default function HobbiesScreen() {
@@ -20,10 +20,11 @@ export default function HobbiesScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const chatScrollViewRef = useRef<ScrollView>(null); // Renamed ref for clarity
+  const chatScrollViewRef = useRef<ScrollView>(null);
 
   const API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
 
+  // Sends a message to OpenAI's GPT-3.5-turbo model and returns the bot's response.
   const askOpenAI = async (userMessage: string, hobbyDescription: string): Promise<string> => {
     const systemPrompt = `You are a friendly assistant. Answer questions based on the hobby: "${hobbyDescription}" '\nPlease limit your response to no more than 40 words.'`;
 
@@ -47,6 +48,7 @@ export default function HobbiesScreen() {
     return response.data.choices[0].message.content.trim();
   };
 
+  // Handles sending a user message, updating chat messages, and fetching a response from OpenAI.
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -70,8 +72,8 @@ export default function HobbiesScreen() {
     }
   };
 
+  // Renders the main UI for the Hobbies Screen, including hobby selection, a hobby card, and a chat interface.
   return (
-    // Reintroduce the outer ScrollView
     <ScrollView style={styles.mainScrollView} nestedScrollEnabled={true}>
       <ThemedView style={styles.titleContainer}>
         <View style={styles.headerContent}>
@@ -100,12 +102,12 @@ export default function HobbiesScreen() {
               style={{ flex: 1 }}
             >
               <ScrollView
-                ref={chatScrollViewRef} // Use the specific ref for chat
+                ref={chatScrollViewRef}
                 style={styles.chatScrollView}
                 contentContainerStyle={styles.chatContentContainer}
                 onContentSizeChange={() => chatScrollViewRef.current?.scrollToEnd({ animated: true })}
                 keyboardShouldPersistTaps="handled"
-                nestedScrollEnabled={true} // IMPORTANT: Allow nested scrolling for the chat
+                nestedScrollEnabled={true}
               >
                 {messages.map((msg, index) => (
                   <View
@@ -142,14 +144,15 @@ export default function HobbiesScreen() {
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   mainScrollView: {
-    flex: 1, 
+    flex: 1,
   },
   titleContainer: {
     alignItems: 'center',
-    paddingTop: Platform.OS === 'android' ? 25 : 0, 
-    paddingBottom: 20, 
+    paddingTop: Platform.OS === 'android' ? 25 : 0,
+    paddingBottom: 20,
   },
   headerContent: {
     width: 300,
@@ -171,19 +174,19 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 30,
-    paddingHorizontal: 16, 
-    width: '100%', 
+    paddingHorizontal: 16,
+    width: '100%',
   },
   chatContainer: {
     marginTop: 4,
     backgroundColor: '#f2ede8',
     borderRadius: 10,
     padding: 10,
-    height: screenHeight * 0.5, 
-    justifyContent: 'space-between', 
+    height: screenHeight * 0.5,
+    justifyContent: 'space-between',
   },
   chatScrollView: {
-    flex: 1, 
+    flex: 1,
     marginBottom: 10,
   },
   chatContentContainer: {
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
-    width: '100%', // Ensure it takes full width
+    width: '100%',
   },
   input: {
     flex: 1,

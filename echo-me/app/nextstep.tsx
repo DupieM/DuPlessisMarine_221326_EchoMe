@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 export default function NextStepScreen() {
   const router = useRouter();
 
+  // Renders a screen presenting navigation options to the user, allowing them to choose their next step.
   return (
     <View style={styles.container}>
       <Text style={styles.title}>What’s next?</Text>
@@ -35,39 +36,40 @@ export default function NextStepScreen() {
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    padding: 13, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    backgroundColor: '#A6BCE6' 
+  container: {
+    flex: 1,
+    padding: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#A6BCE6'
   },
-  title: { 
-    fontSize: 55, 
-    fontWeight: 'bold', 
+  title: {
+    fontSize: 55,
+    fontWeight: 'bold',
     marginBottom: 10,
     color: '#1E1924'
   },
-  subtitle: { 
-    fontSize: 25, 
-    color: '#1E1924', 
-    marginBottom: 10, 
-    textAlign: 'center' 
+  subtitle: {
+    fontSize: 25,
+    color: '#1E1924',
+    marginBottom: 10,
+    textAlign: 'center'
   },
-  titletwo: { 
-    fontSize: 25, 
+  titletwo: {
+    fontSize: 25,
     marginBottom: 7,
     color: '#1E1924',
     fontStyle: 'italic',
     marginTop: 7
   },
-  subtitletwo: { 
-    fontSize: 25, 
-    color: '#1E1924', 
-    marginBottom: 10, 
+  subtitletwo: {
+    fontSize: 25,
+    color: '#1E1924',
+    marginBottom: 10,
     marginTop: 0,
-    textAlign: 'center' 
+    textAlign: 'center'
   },
   option: {
     backgroundColor: '#F34BC0',
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginLeft: -160
   },
-   optionthree: {
+  optionthree: {
     backgroundColor: '#F34BC0',
     paddingVertical: 14,
     paddingHorizontal: 40,
@@ -92,9 +94,9 @@ const styles = StyleSheet.create({
     marginTop: -50,
     marginLeft: 150
   },
-  optionText: { 
-    color: '#F3ECE4', 
-    fontSize: 16, 
-    fontWeight: 'bold' 
+  optionText: {
+    color: '#F3ECE4',
+    fontSize: 16,
+    fontWeight: 'bold'
   },
 });

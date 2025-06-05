@@ -8,11 +8,13 @@ import { journeyData } from '@/components/screen_chat/ChatPrompt';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
+// Defines the types for the journey years and sets up the tabs and screen width.
 type JourneyYear = '1st year' | '2nd year' | '3rd year' | 'Post-Graduete';
 const tabs: JourneyYear[] = ['1st year', '2nd year', '3rd year', 'Post-Graduete'];
 const screenWidth = Dimensions.get('window').width;
 
 export default function JourneyScreen() {
+  // creating const varibles to call functions and data
   const [currentTab, setCurrentTab] = useState<JourneyYear>('1st year');
   const [progressIndex, setProgressIndex] = useState(0);
   const router = useRouter();
@@ -26,24 +28,36 @@ export default function JourneyScreen() {
 
   const hasNavigated = useRef(false);
 
+  // Handles changes in viewable items for the FlatList, updating progress and saving it.
   const onViewableItemsChanged = React.useRef(({ viewableItems }: any) => {
-  if (viewableItems.length > 0) {
-    const index = viewableItems[0].index;
-    if (index !== null) {
-      setProgressIndex(index);
-      saveProgress(index);
-    }
-  }
-}).current;
+    if (viewableItems.length > 0) {
+      const index = viewableItems[0].index;
+      if (index !== null) {
+        setProgressIndex(index);
+        saveProgress(index);
 
+        // Check if it's the last slide and navigation hasn't happened yet
+        if (index === prompts.length - 1 && !hasNavigated.current) {
+          hasNavigated.current = true; // Set flag to prevent multiple navigations
+          setTimeout(() => {
+            router.push('/nextstep');
+          }, 800);
+        }
+      }
+    }
+  }).current;
+
+  // Saves the current progress (tab and index) to AsyncStorage.
   const saveProgress = async (index: number) => {
     await AsyncStorage.setItem('journeyProgress', JSON.stringify({ tab: currentTab, index }));
   };
 
+  // Loads saved progress from AsyncStorage on component mount.
   useEffect(() => {
     loadProgress();
   }, []);
 
+  // Retrieves and sets the saved progress from AsyncStorage.
   const loadProgress = async () => {
     const stored = await AsyncStorage.getItem('journeyProgress');
     if (stored) {
@@ -53,6 +67,7 @@ export default function JourneyScreen() {
     }
   };
 
+  // Navigates to the chat screen with a specific initial prompt.
   const handleGoToChat = (prompt: string) => {
     router.push({
       pathname: '/chat',
@@ -60,12 +75,13 @@ export default function JourneyScreen() {
     });
   };
 
+  // Renders the main UI for the Journey Screen, including tabs, progress bar, and a FlatList of prompts.
   return (
     <View style={styles.container}>
       <Text style={styles.pageTitle}>My Journey</Text>
       <Text style={styles.descriptionText}>
         Let me guide you through the learning milestones that shaped my path through my studies.
-        </Text>
+      </Text>
 
       <View style={styles.box}>
         <View style={styles.tabContainer}>
@@ -75,6 +91,7 @@ export default function JourneyScreen() {
               onPress={() => {
                 setCurrentTab(tab);
                 setProgressIndex(0);
+                hasNavigated.current = false; // Reset the flag when changing tabs
               }}
             >
               <Text style={[styles.tabText, currentTab === tab && styles.activeTab]}>{tab}</Text>
@@ -106,12 +123,8 @@ export default function JourneyScreen() {
             if (item === '__last_slide__') {
               return (
                 <View style={[styles.promptBox, { backgroundColor: '#DDECF6' }]}>
-                  <TouchableOpacity
-                    style={[styles.chatButton, { marginTop: 20 }]}
-                    onPress={() => router.push('/nextstep')}
-                  >
-                    <Text style={styles.buttonText}>Continue</Text>
-                  </TouchableOpacity>
+                  {/* The actual navigation will be handled by the setTimeout in onViewableItemsChanged */}
+                  <Text style={styles.promptText}>You've reached the end of this journey!</Text>
                 </View>
               );
             }
@@ -144,18 +157,18 @@ export default function JourneyScreen() {
             />
           ))}
         </View>
-
       </View>
     </View>
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
-    padding: 15, 
-    backgroundColor: '#A6BCE6', 
-    alignItems: 'center' 
+    padding: 15,
+    backgroundColor: '#A6BCE6',
+    alignItems: 'center'
   },
   pageTitle: {
     fontSize: 60,
@@ -171,22 +184,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'left',
   },
-  tabContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-around', 
-    width: '100%', 
-    marginBottom: 9 
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 9
   },
-  tabText: { 
+  tabText: {
     fontSize: 15,
     color: '#3B3356',
     paddingHorizontal: 8,
     fontStyle: 'italic'
   },
-  activeTab: { 
-    color: '#1E1924', 
-    fontWeight: 'bold', 
-    textDecorationLine: 'underline' 
+  activeTab: {
+    color: '#1E1924',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline'
   },
   box: {
     width: 360,
@@ -211,8 +224,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 70,
   },
-  progressBar: { 
-    marginVertical: 10 
+  progressBar: {
+    marginVertical: 10
   },
   promptBox: {
     marginTop: 5,
@@ -225,10 +238,10 @@ const styles = StyleSheet.create({
     height: 350,
     justifyContent: 'center',
   },
-  promptText: { 
-    fontSize: 25, 
-    textAlign: 'center', 
-    color: '#3B3356' 
+  promptText: {
+    fontSize: 25,
+    textAlign: 'center',
+    color: '#3B3356'
   },
   paginationContainer: {
     flexDirection: 'row',
@@ -254,7 +267,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 40
   },
-  buttonText: { 
+  buttonText: {
     color: '#F3ECE4',
     fontWeight: 'bold',
     textAlign: 'center',

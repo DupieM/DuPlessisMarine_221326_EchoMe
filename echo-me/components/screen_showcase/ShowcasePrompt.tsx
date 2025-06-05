@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Defines the data for various projects, categorized by "UX Design" and "Interactive Development".
 export const ShowcaseData = {
   'UX Design': [
     {

@@ -9,6 +9,7 @@ import { ChatCard } from '@/components/screen_chat/ChatCard';
 
 export default function TabTwoScreen() {
 
+  // Renders the main UI for the Chat screen, displaying a title, description, and the ChatCard component.
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
@@ -22,17 +23,17 @@ export default function TabTwoScreen() {
         <View style={styles.contentContainer}>
           <ChatCard />
         </View>
-
       </ThemedView>
     </ParallaxScrollView>
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'center',
   },
-   headerContent: {
+  headerContent: {
     width: 300,
     height: 160,
     marginBottom: 30
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     textAlign: 'left'
   },
-   contentContainer: {
+  contentContainer: {
     width: 320,
     padding: 10,
     marginBottom: -40

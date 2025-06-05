@@ -1,7 +1,8 @@
 import React from 'react';
 
+// Defines the data for various hobbies, including their name, description, and an associated image.
 export const ShowcaseData = {
-    'Hobby': [
+  'Hobby': [
     {
       name: 'Drawing',
       description: 'I love drawing because it lets me express emotions and ideas that words can’t capture. It helps me relax and explore my imagination freely.',

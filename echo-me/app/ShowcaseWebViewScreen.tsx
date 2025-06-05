@@ -1,11 +1,13 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, ActivityIndicator, View, Text } from 'react-native'; // <--- Make sure Text is here
+import { SafeAreaView, StyleSheet, ActivityIndicator, View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useLocalSearchParams } from 'expo-router'; // Import useLocalSearchParams
+import { useLocalSearchParams } from 'expo-router';
 
 export default function ShowcaseWebViewScreen() {
-  const { url } = useLocalSearchParams(); // Get parameters from the URL
+  // Retrieves parameters from the URL, specifically the 'url' to be loaded in the WebView.
+  const { url } = useLocalSearchParams();
 
+  // Displays an error message if no URL is provided.
   if (!url) {
     return (
       <SafeAreaView style={styles.container}>
@@ -16,15 +18,15 @@ export default function ShowcaseWebViewScreen() {
     );
   }
 
-  // Ensure 'url' is treated as a string, as useLocalSearchParams can return string | string[]
+  // Ensures 'url' is treated as a string, handling cases where it might be an array.
   const uriString = Array.isArray(url) ? url[0] : url;
 
+  // Renders a WebView to display the provided URL, including a loading indicator and error handling.
   return (
     <SafeAreaView style={styles.container}>
       <WebView
         source={{ uri: uriString }}
         style={styles.webview}
-        // Optional: Add a loading indicator
         startInLoadingState={true}
         renderLoading={() => (
           <View style={styles.loadingContainer}>
@@ -34,17 +36,17 @@ export default function ShowcaseWebViewScreen() {
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
           console.warn('WebView error: ', nativeEvent);
-          // You could display a user-friendly error message within the WebView or navigate back
         }}
       />
     </SafeAreaView>
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#A6BCE6', // Or match your app's background
+    backgroundColor: '#A6BCE6',
   },
   webview: {
     flex: 1,

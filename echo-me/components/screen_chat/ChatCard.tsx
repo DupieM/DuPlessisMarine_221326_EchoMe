@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react'; // Import useCallback
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Keyboard } from 'react-native';
-// Assuming journeyPrompt is defined in ChatPrompt.ts/js
-import { journeyPrompt } from '@/components/screen_chat/ChatPrompt'; // Corrected import path based on your earlier code
+import { journeyPrompt } from '@/components/screen_chat/ChatPrompt';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useFocusEffect } from 'expo-router'; // Make sure useFocusEffect is imported
 
 export function ChatCard() {
+  // creating const varibles to call functions and data
   const [tab, setTab] = useState<'chat' | 'journey'>('journey');
   const [input, setInput] = useState('');
   const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([]);
@@ -16,22 +16,15 @@ export function ChatCard() {
 
   // Use a ref to track if the initial prompt has been processed to avoid re-processing
   const initialPromptHandled = useRef(false);
+  // Use a ref to store the *last processed* initialPrompt to prevent re-processing the *same* prompt
+  const lastProcessedPrompt = useRef<string | undefined>(undefined);
 
-  // Effect to handle the initial prompt coming from JourneyScreen
-  useEffect(() => {
-    if (initialPrompt && !initialPromptHandled.current) {
-      setTab('journey'); // Switch to the journey tab
-      // Instead of setting the input directly, let's use the AI to generate a question
-      // This will be treated as an AI-generated user question
-      generateUserQuestionFromPrompt(initialPrompt);
-      initialPromptHandled.current = true; // Mark as handled
-    }
-  }, [initialPrompt]);
 
   // Function to generate a user-like question from the journey prompt
   const generateUserQuestionFromPrompt = async (promptText: string) => {
     setIsLoading(true);
     try {
+      // ... (rest of your generateUserQuestionFromPrompt function remains the same)
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -51,27 +44,47 @@ export function ChatCard() {
             },
             { role: 'user', content: promptText }
           ],
-          temperature: 0.5, // Lower temperature for more consistent rephrasing
-          max_tokens: 50 // Limit the length of the generated question
+          temperature: 0.5,
+          max_tokens: 50
         }),
       });
 
       const data = await response.json();
-      const generatedQuestion = data.choices?.[0]?.message?.content?.trim() || promptText; // Fallback to original if generation fails
+      const generatedQuestion = data.choices?.[0]?.message?.content?.trim() || promptText;
 
-      // Add the AI-generated question to journey messages as if the user asked it
       setJourneyMessages(prev => [...prev, { role: 'user', content: generatedQuestion }]);
-      // Immediately send this generated question for an AI answer
-      sendMessage(generatedQuestion, true); // Pass true to indicate it's an initial AI-triggered message
+      sendMessage(generatedQuestion, true);
     } catch (error) {
       console.error("Error generating user question:", error);
-      // Fallback: Add the original prompt directly if question generation fails
       setJourneyMessages(prev => [...prev, { role: 'user', content: promptText }]);
-      sendMessage(promptText, true); // Send the original prompt to AI
+      sendMessage(promptText, true);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Effect to handle the initial prompt coming from JourneyScreen
+  // This will now only trigger if initialPrompt is present AND it's a new prompt or hasn't been handled
+  useEffect(() => {
+    if (initialPrompt && initialPrompt !== lastProcessedPrompt.current) {
+        setTab('journey');
+        generateUserQuestionFromPrompt(initialPrompt);
+        lastProcessedPrompt.current = initialPrompt; 
+    }
+  }, [initialPrompt]); 
+
+  // Use useFocusEffect to reset the lastProcessedPrompt when the screen loses focus
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        // This runs when the screen is unfocused
+        lastProcessedPrompt.current = undefined; 
+        initialPromptHandled.current = false; 
+      };
+    }, [])
+  );
+
+  // ... rest of your ChatCard component (sendMessage, messages useEffect, handleRefreshChat, handleRefreshJourney, return statement) ...
 
   const sendMessage = async (messageContent?: string, isInitialAITriggered: boolean = false) => {
     const textToSend = messageContent || input.trim();
@@ -82,13 +95,12 @@ export function ChatCard() {
     const currentMessages = tab === 'journey' ? journeyMessages : chatMessages;
     const setCurrentMessages = tab === 'journey' ? setJourneyMessages : setChatMessages;
 
-    // Only add user message to history if it's not an AI-triggered initial message
     if (!isInitialAITriggered) {
       setCurrentMessages(prevMessages => [...prevMessages, userMessage]);
-      setInput(''); // Clear input immediately after sending for manual input
+      setInput('');
     }
-    
-    setIsLoading(true); // Show loader
+
+    setIsLoading(true);
 
     try {
       const promptToAI =
@@ -112,8 +124,8 @@ export function ChatCard() {
                   ? 'You are a university student giving advice based on their personal university experience.'
                   : 'You are a helpful and knowledgeable AI assistant.'
             },
-            ...currentMessages, // Send previous messages for context
-            { role: 'user', content: promptToAI } // Send the specific prompt for AI to respond to
+            ...currentMessages,
+            { role: 'user', content: promptToAI }
           ],
           temperature: 0.7
         })
@@ -132,7 +144,7 @@ export function ChatCard() {
       console.error('Chat Error:', err);
       setCurrentMessages(prev => [...prev, { role: 'assistant', content: 'Something went wrong while contacting OpenAI.' }]);
     } finally {
-      setIsLoading(false); // Hide loader regardless of success or failure
+      setIsLoading(false);
     }
   };
 
@@ -155,6 +167,7 @@ export function ChatCard() {
     setInput('');
     setIsLoading(false);
     initialPromptHandled.current = false; // Reset for potential new journey prompts
+    lastProcessedPrompt.current = undefined; // Also clear this on refresh
   };
 
   return (
@@ -204,7 +217,7 @@ export function ChatCard() {
             onChangeText={setInput}
             style={styles.input}
             placeholder="Message"
-            onSubmitEditing={() => sendMessage()} // Call with no arguments for manual input
+            onSubmitEditing={() => sendMessage()}
             blurOnSubmit={false}
           />
           <TouchableOpacity onPress={() => sendMessage()} style={styles.sendButton} disabled={isLoading}>
@@ -218,7 +231,7 @@ export function ChatCard() {
 
 const styles = StyleSheet.create({
   mainbox: {
-    marginBottom: 30
+    marginBottom: 29
   },
   container: {
     marginTop: 10,

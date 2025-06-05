@@ -1,15 +1,15 @@
-// app/showcase.tsx
 import { ShowcaseData } from '@/components/screen_showcase/ShowcasePrompt';
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList, ViewToken, Dimensions } from 'react-native';
 import * as Progress from 'react-native-progress';
-import { router } from 'expo-router'; // Import the router
+import { router } from 'expo-router';
 // @ts-ignore
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width } = Dimensions.get('window');
 
 export default function ShowcaseScreen() {
+  // Defines the type for ShowcaseCategory and initializes state variables.
   type ShowcaseCategory = keyof typeof ShowcaseData;
   const categories = Object.keys(ShowcaseData) as ShowcaseCategory[];
   const [currentTab, setCurrentTab] = useState<ShowcaseCategory>(categories[0]);
@@ -18,6 +18,7 @@ export default function ShowcaseScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
+  // Handles changes in viewable items for the FlatList, updating the current index.
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
       if (viewableItems.length > 0) {
@@ -28,15 +29,15 @@ export default function ShowcaseScreen() {
 
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
-  // Function to handle opening the URL in WebView using expo-router
+  // Handles opening a URL in WebView using expo-router.
   const openLinkInApp = (url: string) => {
-    // Navigate to ShowcaseWebViewScreen and pass the URL as a query parameter
     router.push({
-      pathname: '/ShowcaseWebViewScreen', // This matches your file name app/ShowcaseWebViewScreen.tsx
+      pathname: '/ShowcaseWebViewScreen',
       params: { url: url },
     });
   };
 
+  // Renders the main UI for the Showcase Screen, including categories, a progress bar, and a FlatList of projects.
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.pageTitle}>Showcase</Text>
@@ -45,7 +46,6 @@ export default function ShowcaseScreen() {
       </Text>
 
       <View style={styles.box}>
-
         <View style={styles.tabContainer}>
           {categories.map((tab) => (
             <TouchableOpacity
@@ -86,14 +86,13 @@ export default function ShowcaseScreen() {
               <Image source={item.image} style={styles.projectImage} />
               <Text style={styles.projectName}>{item.name}</Text>
               <Text style={styles.projectDescription}>{item.description}</Text>
-              {/* Call the new openLinkInApp function */}
               <TouchableOpacity onPress={() => openLinkInApp(item.link)}>
                 <Text style={styles.platformLink}>{item.platform} ↗</Text>
               </TouchableOpacity>
             </View>
           )}
         />
-        
+
         <View style={styles.paginationContainer}>
           {projects.map((_, index) => (
             <View
@@ -105,12 +104,12 @@ export default function ShowcaseScreen() {
             />
           ))}
         </View>
-
       </View>
     </ScrollView>
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   container: {
     padding: 20,

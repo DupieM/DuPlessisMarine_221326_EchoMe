@@ -3,12 +3,14 @@ import { StyleSheet, View, ImageSourcePropType, Image } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+// Defines the props for the HobbyCard component.
 interface HobbyCardProps {
   imageSource: ImageSourcePropType;
   description: string;
 }
 
 export function HobbyCard({ imageSource, description }: HobbyCardProps) {
+  // Renders a card displaying a hobby image and its description.
   return (
     <ThemedView style={styles.cardContainer}>
       <Image source={imageSource} style={styles.hobbyImage} />
@@ -17,9 +19,10 @@ export function HobbyCard({ imageSource, description }: HobbyCardProps) {
   );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#F3ECE4', // AliceBlue, a very light blue for the card
+    backgroundColor: '#F3ECE4',
     borderRadius: 15,
     padding: 15,
     alignItems: 'center',

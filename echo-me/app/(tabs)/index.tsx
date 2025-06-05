@@ -9,6 +9,7 @@ import { ThemedView } from '@/components/ThemedView';
 export default function HomeScreen() {
   const router = useRouter();
 
+  // Renders the main home screen content, including an introduction, description, and navigation buttons.
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
@@ -22,8 +23,8 @@ export default function HomeScreen() {
 
         <View style={styles.descriptioncontainer}>
           <Text style={styles.description}>
-            Need study tips, creative ideas, or career advice? I’m here to help! 
-            Follow along as I share my journey from uni to postgrad and feel free 
+            Need study tips, creative ideas, or career advice? I’m here to help!
+            Follow along as I share my journey from uni to postgrad and feel free
             to ask questions or chat about your goals anytime.
           </Text>
         </View>
@@ -34,19 +35,18 @@ export default function HomeScreen() {
             <Text style={styles.texttwo}>My Journey</Text>
             <Image source={require('../../assets/images/Books.png')} style={styles.icon} />
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={styles.buttontwo} onPress={() => router.push('/showcase')}>
             <Text style={styles.texttwo}>Showcase</Text>
             <Image source={require('../../assets/images/art.png')} style={styles.icontwo} />
           </TouchableOpacity>
-         
         </View>
-  
       </ThemedView>
     </ParallaxScrollView>
-  )
+  );
 }
 
+// Defines the stylesheets for the components.
 const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'center',
