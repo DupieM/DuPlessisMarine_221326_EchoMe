@@ -305,7 +305,7 @@ Contributions are what makes the open-source community such an amazing place to 
 <!-- LICENSE -->
 ## License
 
-The Thinking CAbinet Rights reserved © 2025
+EchoMe Rights reserved © 2025
 
 <!-- LICENSE -->
 ## Contact
